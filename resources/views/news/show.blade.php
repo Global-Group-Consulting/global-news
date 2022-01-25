@@ -48,7 +48,8 @@
             </div>
           </div>
 
-          <div class="my-4">
+
+          <div class="mt-4 py-4 border-top">
             {!! $news->content !!}
           </div>
 

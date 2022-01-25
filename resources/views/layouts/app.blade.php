@@ -13,6 +13,7 @@
 
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}" defer></script>
+  <script src="//js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 
   <!-- Fonts -->
 {{--  <link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
@@ -59,6 +60,14 @@
     </div>
   </main>
 </div>
+
+@yield("scripts")
+
+<script type="text/javascript">
+  bkLib.onDomLoaded(nicEditors.allTextAreas);
+
+
+</script>
 </body>
 
 </html>
