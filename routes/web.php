@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use \Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*Route::get('/', function () {
+  return view('welcome');
+});*/
+
+Route::middleware("auth")->get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes([
+  "register" => false,
+  "reset"    => false,
+  "confirm"  => false
+]);
+
+Route::middleware("auth")->resource("news", \App\Http\Controllers\NewsController::class);
+Route::middleware("auth")->resource("events", \App\Http\Controllers\EventController::class);

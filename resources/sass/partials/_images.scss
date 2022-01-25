@@ -1,0 +1,10 @@
+.img-thumbnail-container {
+  position: relative;
+
+  .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+  }
+}

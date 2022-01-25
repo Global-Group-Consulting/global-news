@@ -1,0 +1,19 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
+// @import "~@fortawesome/fontawesome-free/css/regular.min.css";
+@import "~@fortawesome/fontawesome-free/css/solid.min.css";
+@import "~vue-multiselect/dist/vue-multiselect.min.css";
+
+@import "partials/forms";
+@import "partials/images";
+
+main {
+  height: 100vh;
+}
