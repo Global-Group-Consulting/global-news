@@ -33,8 +33,8 @@ composer install --prefer-dist --no-scripts -q -o
 
 
 @task('set_permissions')
-sudo chmod 777 -R storage/
-sudo chmod 777 -R bootstrap/
+sudo chmod 777 -R {{$new_release_dir}}/storage/
+sudo chmod 777 -R {{$new_release_dir}}/bootstrap/
 @endtask
 
 
