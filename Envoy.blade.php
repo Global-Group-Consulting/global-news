@@ -17,12 +17,12 @@ update_symlinks
 @endstory
 
 @task('clone_repository')
-echo 'Cloning repository'
-[ -d {{ $releases_dir }} ] || mkdir {{ $releases_dir }}
-git clone --depth 1 {{ $repository }} {{ $new_release_dir }}
-cd {{ $new_release_dir }}
-git pull origin {{ $branch }}
-git reset --hard {{ $commit }}
+    echo 'Cloning repository'
+    [ -d {{ $releases_dir }} ] || mkdir {{ $releases_dir }}
+    git clone {{ $repository }} -b {{$branch}} {{ $new_release_dir }}
+    cd {{ $new_release_dir }}
+    <!--git pull origin {{ $branch }}
+    git reset &#45;&#45;hard {{ $commit }}-->
 @endtask
 
 @task('run_composer')
