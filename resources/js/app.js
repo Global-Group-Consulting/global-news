@@ -7,6 +7,7 @@
 require('./bootstrap');
 require('./dropdowns');
 require('./modals');
+require('./forms');
 
 window.Vue = require('vue').default;
 

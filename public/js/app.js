@@ -5268,6 +5268,8 @@ __webpack_require__(/*! ./dropdowns */ "./resources/js/dropdowns.js");
 
 __webpack_require__(/*! ./modals */ "./resources/js/modals.js");
 
+__webpack_require__(/*! ./forms */ "./resources/js/forms.js");
+
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
 /**
  * The following block of code may be used to automatically register your
@@ -5374,6 +5376,39 @@ window.addEventListener("DOMContentLoaded", function () {
         input.checked = checked;
       });
       dropDown.dispatchEvent(new CustomEvent("change"));
+    });
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/forms.js":
+/*!*******************************!*\
+  !*** ./resources/js/forms.js ***!
+  \*******************************/
+/***/ (() => {
+
+window.addEventListener("DOMContentLoaded", function () {
+  var formsList = document.querySelectorAll('form');
+  formsList.forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+      if (this.submitting) {
+        e.preventDefault();
+        return;
+      }
+
+      var submitButton = this.querySelector("[type='submit']");
+      var cancelButton = this.querySelector("[type='reset']");
+      var loadingSpinner = "<span class=\"spinner-border spinner-border-sm me-2\" role=\"status\" aria-hidden=\"true\"></span>";
+      this.submitting = true;
+      submitButton.disabled = true;
+      submitButton.classList.add("disabled");
+      submitButton.innerHTML = loadingSpinner + submitButton.innerHTML;
+
+      if (cancelButton) {
+        cancelButton.classList.add("disabled");
+        cancelButton.disabled = true;
+      }
     });
   });
 });
