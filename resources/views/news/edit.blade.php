@@ -46,6 +46,7 @@
                 @include("partials.form_select", [
                   "label" => "Visibile in",
                   "name" => "apps",
+                  "multiple" => true,
                   "value"=> $news["apps"],
                   "options" => $appsOptions
                 ])

@@ -34,6 +34,7 @@
                 @include("partials.form_select", [
                   "label" => "Visibile in",
                   "name" => "apps",
+                  "multple" => true,
                   "value"=> old("apps"),
                   "options" => $appsOptions
                 ])

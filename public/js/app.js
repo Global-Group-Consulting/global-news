@@ -5354,10 +5354,11 @@ window.addEventListener("DOMContentLoaded", function () {
   dropdowns.forEach(function (el) {
     var dropdownMenu = el.parentNode.querySelector(".dropdown-menu");
     var dropdownMenuCheckboxes = dropdownMenu.querySelectorAll("input[type='checkbox']");
+    var dropdownMenuRadios = dropdownMenu.querySelectorAll("input[type='radio']");
     dropdownMenu.addEventListener("change", function (e) {
-      updateSelectText(el, dropdownMenuCheckboxes);
+      updateSelectText(el, dropdownMenuCheckboxes.length > 0 ? dropdownMenuCheckboxes : dropdownMenuRadios);
     });
-    updateSelectText(el, dropdownMenuCheckboxes);
+    updateSelectText(el, dropdownMenuCheckboxes.length > 0 ? dropdownMenuCheckboxes : dropdownMenuRadios);
   });
   actionButtons.forEach(function (button) {
     var action = button.dataset.ddAction;

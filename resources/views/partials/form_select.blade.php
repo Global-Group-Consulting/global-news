@@ -29,16 +29,18 @@
     @enderror
 
     <ul class="dropdown-menu" aria-labelledby="{{$name}}Select">
-      <li>
-        <button class="dropdown-item" type="button" data-dd-action="none">Nessuna</button>
-      </li>
-      <li>
-        <button class="dropdown-item" type="button" data-dd-action="all">Tutte</button>
-      </li>
+      @if($isMultiple)
+        <li>
+          <button class="dropdown-item" type="button" data-dd-action="none">Nessuna</button>
+        </li>
+        <li>
+          <button class="dropdown-item" type="button" data-dd-action="all">Tutte</button>
+        </li>
 
-      <li>
-        <hr class="dropdown-divider">
-      </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+      @endif
 
       @foreach($options as $option)
         @php
@@ -54,9 +56,9 @@
         <li class="dropdown-item">
           <div class="form-check">
             <input class="form-check-input"
-                   type="checkbox"
+                   type="{{$isMultiple ? 'checkbox' : 'radio'}}"
                    id="{{$selectName}}_{{$optionValue}}_option"
-                   name="{{$selectName}}[]"
+                   name="{{$selectName}}"
                    value="{{$optionValue}}" {{ $selected ? "checked" : '' }}>
             <label class="form-check-label" for="{{$selectName}}_{{$optionValue}}_option">
               {{ $optionLabel }}

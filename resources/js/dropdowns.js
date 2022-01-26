@@ -17,12 +17,13 @@ window.addEventListener("DOMContentLoaded", function () {
   dropdowns.forEach(el => {
     const dropdownMenu = el.parentNode.querySelector(".dropdown-menu");
     const dropdownMenuCheckboxes = dropdownMenu.querySelectorAll("input[type='checkbox']");
-    
+    const dropdownMenuRadios = dropdownMenu.querySelectorAll("input[type='radio']");
+  
     dropdownMenu.addEventListener("change", function (e) {
-      updateSelectText(el, dropdownMenuCheckboxes)
+      updateSelectText(el, dropdownMenuCheckboxes.length > 0 ? dropdownMenuCheckboxes : dropdownMenuRadios)
     })
-    
-    updateSelectText(el, dropdownMenuCheckboxes)
+  
+    updateSelectText(el, dropdownMenuCheckboxes.length > 0 ? dropdownMenuCheckboxes : dropdownMenuRadios)
   })
   
   actionButtons.forEach(button => {
