@@ -8,11 +8,15 @@ window.addEventListener("DOMContentLoaded", function () {
   deleteModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget
-    
+  
     // Extract info from data-bs-* attributes
     const id = button.dataset.bsId
     const form = this.querySelector('form')
-    
-    form.action = form.action.replace("_id", id)
+  
+    if (!form.originalAction) {
+      form.originalAction = form.action
+    }
+  
+    form.action = form.originalAction.replace("_id", id)
   })
 })
