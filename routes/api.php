@@ -20,3 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')
   ->patch('/news/{news}/read', [\App\Http\Controllers\Api\NewsStatusController::class, "read"]);
+
+Route::middleware('auth:api')
+  ->get('/news', [\App\Http\Controllers\Api\NewsStatusController::class, "index"]);

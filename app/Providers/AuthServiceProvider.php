@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Test\Constraint\ResponseStatusCodeSame;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -45,7 +46,18 @@ class AuthServiceProvider extends ServiceProvider {
       if ($apps->count() !== 2) {
         throw new AccessDeniedHttpException("Unauthorized - Invalid secrets");
       }
+  
+      $reqApp = null;
       
+      foreach ($apps as $app){
+        if($app["secrets"]["client"]["secretKey"] === $headers->get('client-secret')){
+          $reqApp = $app;
+        }
+      }
+      
+      // Store in session the app where the request has come
+      Session::put('app', $reqApp);
+  
       return User::find($authUser["_id"]);
     });
   }
