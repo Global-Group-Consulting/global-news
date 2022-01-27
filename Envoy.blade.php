@@ -10,25 +10,28 @@
 @endsetup
 
 @story('deploy')
-clone_repository
-run_composer
-set_permissions
-update_symlinks
+    clone_repository
+    run_composer
+    set_permissions
+    update_symlinks
 @endstory
 
 @task('clone_repository')
-    echo 'Cloning repository'
+    echo 'START - Cloning repository'
+    echo 'creating dirs'
     [ -d {{ $releases_dir }} ] || mkdir {{ $releases_dir }}
+
+    echo 'git clone'
     git clone {{ $repository }} -b {{$branch}} {{ $new_release_dir }}
+
+    echo 'cd {{$new_release_dir}}'
     cd {{ $new_release_dir }}
-    <!--git pull origin {{ $branch }}
-    git reset &#45;&#45;hard {{ $commit }}-->
 @endtask
 
 @task('run_composer')
-echo "Starting deployment ({{ $release }})"
-cd {{ $new_release_dir }}
-composer install --prefer-dist --no-scripts -q -o
+    echo "Starting deployment ({{ $release }})"
+    cd {{ $new_release_dir }}
+    composer install --prefer-dist --no-scripts -q -o
 @endtask
 
 

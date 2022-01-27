@@ -48,11 +48,16 @@
             </div>
           </div>
 
-
           <div class="mt-4 py-4 border-top">
             {!! $news->content !!}
           </div>
 
+          <div>
+            Letture: {{ count($news->readStatuses)  }}<br>
+            <code>
+              <pre>{{json_encode($news->readStatuses)}}</pre>
+            </code>
+          </div>
 
         </div>
       </div>
