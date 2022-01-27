@@ -53,9 +53,9 @@
           </div>
 
           <div>
-            Letture: {{ count($news->readStatuses)  }}<br>
+            Letture: <strong>{{ count($news->readStatuses ?? [])  }}</strong><br>
             <code>
-              <pre>{{json_encode($news->readStatuses)}}</pre>
+              <pre>{{json_encode($news->readStatuses ?? [])}}</pre>
             </code>
           </div>
 

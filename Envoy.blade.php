@@ -36,23 +36,22 @@
 
 
 @task('set_permissions')
-sudo chmod 777 -R {{$new_release_dir}}/storage/
-sudo chmod 777 -R {{$new_release_dir}}/bootstrap/
+    echo 'setting permissions'
+    sudo chmod 777 -R {{$new_release_dir}}/storage/
+    sudo chmod 777 -R {{$new_release_dir}}/bootstrap/
 @endtask
 
 
 @task('update_symlinks')
-{{-- echo "Linking storage directory - {{ $app_dir }}"
- rm -rf {{ $new_release_dir }}/storage
- ln -nfs {{ $app_dir }}/storage {{ $new_release_dir }}/storage--}}
+    echo 'Linking .env file'
+    ln -nfs {{ $app_dir }}/.env {{ $new_release_dir }}/.env
 
-echo 'Linking .env file'
-ln -nfs {{ $app_dir }}/.env {{ $new_release_dir }}/.env
+    echo 'Linking current release - {{ $new_release_dir }}'
+    ln -nfs {{ $new_release_dir }} {{ $releases_dir }}/current
 
-echo 'Linking current release - {{ $new_release_dir }}'
-ln -nfs {{ $new_release_dir }} {{ $releases_dir }}/current
+    cd {{ $new_release_dir }}
+{{--    php artisan cache:clear--}}
 
-{{-- php artisan storage:link --}}
-cd {{ $new_release_dir }}
-php artisan cache:clear
+    echo 'restarting php-fpm'
+    sudo /opt/bitnami/ctlscript.sh restart php-fpm
 @endtask
