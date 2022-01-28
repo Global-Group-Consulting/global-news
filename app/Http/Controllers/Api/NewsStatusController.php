@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\App;
 use App\Models\News;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use MongoDB\BSON\UTCDateTime;
 
 class NewsStatusController extends Controller {
@@ -17,9 +19,12 @@ class NewsStatusController extends Controller {
      */
     $app  = Session::get('app');
     $news = News::where("apps", $app["code"])->orderBy("created_at", "desc")->get();
+  
+    return response()->json(array_map(function ($singleNews) {
+      $singleNews["coverImg"] = key_exists("coverImg", $singleNews) ? Storage::temporaryUrl($singleNews["coverImg"], now()->addMinutes(5)) : '';
     
-    
-    return response()->json($news);
+      return $singleNews;
+    }, $news->toArray()));
   }
   
   /**
