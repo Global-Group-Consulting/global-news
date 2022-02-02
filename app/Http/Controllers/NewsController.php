@@ -62,12 +62,15 @@ class NewsController extends Controller {
    */
   public function store(StoreNewsRequest $request): RedirectResponse {
     $data = $request->validated();
-    
-    $data["coverImg"] = $request->file("coverImg")->store("news", []);
-    $data["content"]  = trim($data["content"]);
-    
+  
+    if (key_exists("coverImg", $data)) {
+      $data["coverImg"] = $request->file("coverImg")->store("news", []);
+    }
+    $data["content"] = trim($data["content"]);
+    $data["active"]  = key_exists("active", $data) && (bool) $data["active"];
+  
     News::create($data);
-    
+  
     return redirect()->route("news.index")->with(["status" => "News creata correttamente"]);
   }
   
@@ -117,10 +120,8 @@ class NewsController extends Controller {
       
       $data["coverImg"] = $request->file("coverImg")->store("news", []);
     }
-    
-    if ( !key_exists("active", $data)) {
-      $data["active"] = 0;
-    }
+  
+    $data["active"]  = key_exists("active", $data) && (bool) $data["active"];
     
     $news->update($data);
     

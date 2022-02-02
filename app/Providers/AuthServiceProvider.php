@@ -33,28 +33,38 @@ class AuthServiceProvider extends ServiceProvider {
     Auth::viaRequest('custom-token', function (Request $request) {
       $headers  = $request->headers;
       $authUser = $request->get("_auth_user");
-      
+  
       if ( !$headers->has('client-secret') || !$headers->has('server-secret') || !$authUser) {
         throw new AccessDeniedHttpException("Unauthorized - Missing secrets");
       }
-      
+  
       // cerca sia il client secret che il severe secret per assicurarsi che combaciano
       $apps = App::where("secrets.client.secretKey", $headers->get('client-secret'))
         ->orWhere("secrets.server.secretKey", $headers->get('server-secret'))
         ->get();
-      
-      if ($apps->count() !== 2) {
+  
+      $isSameApp = false;
+  
+      if ($apps->count() === 1) {
+        $app         = $apps[0];
+        $clientMatch = $app->secrets["client"]["secretKey"] === $headers->get('client-secret');
+        $serverMatch = $app->secrets["server"]["secretKey"] === $headers->get('server-secret');
+    
+        $isSameApp = $clientMatch || $serverMatch;
+      }
+  
+      if ($apps->count() !== 2 && !$isSameApp) {
         throw new AccessDeniedHttpException("Unauthorized - Invalid secrets");
       }
   
       $reqApp = null;
-      
-      foreach ($apps as $app){
-        if($app["secrets"]["client"]["secretKey"] === $headers->get('client-secret')){
+  
+      foreach ($apps as $app) {
+        if ($app["secrets"]["client"]["secretKey"] === $headers->get('client-secret')) {
           $reqApp = $app;
         }
       }
-      
+  
       // Store in session the app where the request has come
       Session::put('app', $reqApp);
   
