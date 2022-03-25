@@ -21,6 +21,14 @@
         News
       </a>
     </li>
+
+    <li>
+      <a href="{{ route('notifications.index') }}"
+         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'notifications.') === 0) ? 'active' : '' }}">
+        <i class="fas fa-bell"></i>
+        Notifiche
+      </a>
+    </li>
 <!--    <li>
       <a href="{{ route('events.index') }}"
          class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'events.') === 0) ? 'active' : '' }}">

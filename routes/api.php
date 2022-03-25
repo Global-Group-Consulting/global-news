@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +18,23 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::middleware('auth:api')
-  ->patch('/news/{news}/read', [\App\Http\Controllers\Api\NewsStatusController::class, "read"]);
+  ->namespace("\App\Http\Controllers\Api")
+  ->prefix("news")
+  ->group(function () {
+    
+    Route::get('/', "NewsStatusController@index");
+    Route::patch('/{news}/read', "NewsStatusController@read");
+    
+  });
 
 Route::middleware('auth:api')
-  ->get('/news', [\App\Http\Controllers\Api\NewsStatusController::class, "index"]);
+  ->namespace("\App\Http\Controllers\Api")
+  ->prefix("notifications")
+  ->group(function () {
+    
+    Route::get('/', "NotificationController@index");
+    Route::post('/', "NotificationController@store");
+    Route::patch('/{notification}/read', "NotificationController@read");
+    
+  });
+

@@ -7,6 +7,9 @@ use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property string _id
+ */
 class User extends Authenticatable {
   use HasApiTokens, HasFactory, Notifiable;
   
