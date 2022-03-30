@@ -61,14 +61,20 @@ class Notification extends Model {
      */
     $readings = $this->readings;
     $contains = $readings->contains("userId", $user->_id);
-    
+  
     if ( !$contains) {
       $readings->push(new NotificationReading([
         "userId"   => $user->_id,
         "platform" => $platform
       ]));
     }
-    
+  
+    $completed = $readings->count() === $this->receivers->count();
+  
+    if ($completed) {
+      $this->completed = true;
+    }
+  
     $this->readings = $readings->toArray();
     $this->save();
   }
