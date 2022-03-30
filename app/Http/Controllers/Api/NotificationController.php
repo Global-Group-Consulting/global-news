@@ -19,15 +19,22 @@ class NotificationController extends Controller {
    * @return JsonResponse
    */
   public function index(Request $request): JsonResponse {
-    $user = $request->user()->_id;
+    $user     = $request->user()->_id;
+    $platform = $request->input("platform");
   
-    // For some reason, using classic where doesn't work on subArray element so must use "whereRaw" instead
-    $notifications = Notification::whereRaw([
+    $query = [
       // User is a receiver
       "receivers._id"   => $user,
       // User is not in readings
-      "readings.userId" => ["\$ne" => $user]
-    ])->get();
+      "readings.userId" => ["\$ne" => $user],
+    ];
+  
+    if ($platform) {
+      $query["platforms"] = ["\$eq" => $platform];
+    }
+  
+    // For some reason, using classic where doesn't work on subArray element so must use "whereRaw" instead
+    $notifications = Notification::whereRaw($query)->orderBy("created_id", "desc")->get();
   
     return response()->json($notifications);
   }

@@ -16,8 +16,8 @@
               <th scope="col">Titolo</th>
               <th scope="col">App</th>
               <th scope="col">Tipo</th>
-              <th scope="col">Piattaforme</th>
               <th scope="col">Destinatario</th>
+              <th scope="col">Piattaforme</th>
               <th scope="col">Letta</th>
               <th scope="col">Data creazione</th>
               <th></th>
@@ -31,7 +31,7 @@
                 <td>{{$singleNews->type}}</td>
                 <td>
                   @foreach($singleNews->receivers as $user)
-                    <div>{{$user["firstName"]}} {{$user["lastName"]}}<br>{{$user["email"]}}</div>
+                    <div>{{$user["firstName"]}} {{$user["lastName"]}} - {{$user["email"]}}<br><small>({{ $user["_id"] }})</small></div>
                   @endforeach
                 </td>
                 <td>{{$singleNews->platforms ? join(",", $singleNews->platforms) : ''}}</td>
