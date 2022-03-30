@@ -5,14 +5,6 @@
 
     <div class="col-12 col-md-10 col-xl-10">
 
-      <ul class="nav mb-4 justify-content-center">
-        <li class="nav-item">
-          <a class="nav-link" href="{{route('notifications.create')}}">
-            <i class="fas fa-plus"></i>
-            Aggiungi</a>
-        </li>
-      </ul>
-
       <div class="card">
         <div class="card-header">{{ __('Lista Notifiche') }}</div>
 
@@ -22,10 +14,12 @@
             <thead>
             <tr>
               <th scope="col">Titolo</th>
-              <th scope="col">Visibilità</th>
               <th scope="col">App</th>
-              <th scope="col">Stato</th>
-              <th scope="col">Ultima modifica</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Piattaforme</th>
+              <th scope="col">Destinatario</th>
+              <th scope="col">Letta</th>
+              <th scope="col">Data creazione</th>
               <th></th>
             </tr>
             </thead>
@@ -33,45 +27,37 @@
             @foreach($notifications as $singleNews)
               <tr>
                 <th scope="row">{{$singleNews->title}}</th>
+                <td>{{$singleNews->app}}</td>
+                <td>{{$singleNews->type}}</td>
                 <td>
-                  @if($singleNews->startAt)
-                    dal {{\Carbon\Carbon::parse($singleNews->startAt)->format("d/m/y")}}
-                  @endif
-
-                  @if($singleNews->startAt && $singleNews->endAt)
-                    <br>
-                  @endif
-
-                  @if($singleNews->endAt)
-                    al {{\Carbon\Carbon::parse($singleNews->endAt)->format("d/m/y")}}
-                  @endif
+                  @foreach($singleNews->receivers as $user)
+                    <div>{{$user["firstName"]}} {{$user["lastName"]}}<br>{{$user["email"]}}</div>
+                  @endforeach
                 </td>
-                <td>{{join(", ", $singleNews->apps)}}</td>
-                <td>{{$singleNews->active ? "Attivo" : "Non attivo"}}</td>
-                <td>{{\Carbon\Carbon::parse($singleNews->updated_at)->format("d/m/y H:i")}}</td>
+                <td>{{$singleNews->platforms ? join(",", $singleNews->platforms) : ''}}</td>
                 <td>
-                  <a href="{{route('news.edit', $singleNews->_id)}}" class="btn btn-link">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <a href="{{route('news.show', $singleNews->_id)}}" class="btn btn-link">
+                  @if($singleNews->completed)
+                    <i class="fas fa-check text-success"></i>
+                  @else
+                    <i class="fas fa-pause text-warning"></i>
+                  @endif</td>
+                <td>{{$singleNews->created_at->format("d/m/y H:i")}}</td>
+                <td>
+                  <a href="{{route('notifications.show', $singleNews->_id)}}" class="btn btn-link">
                     <i class="fas fa-eye"></i>
                   </a>
-                  <button class="btn btn-link text-danger" data-bs-toggle="modal"
-                          data-bs-target="#deleteModal"
-                          data-bs-id="{{$singleNews->_id}}">
-                    <i class="fas fa-trash"></i>
-                  </button>
                 </td>
               </tr>
             @endforeach
             </tbody>
           </table>
+
+          {{-- Pagination --}}
+          <div class=" d-flex justify-content-center">
+            {{$notifications->links()}}
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  @include("partials.modals.delete", [
-    "action"=> route("news.destroy", "_id")
-  ])
 @endsection

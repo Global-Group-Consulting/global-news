@@ -14,9 +14,20 @@ class NotificationController extends Controller {
    * @return View
    */
   public function index(): View {
-    $notifications = Notification::paginate();
+    $notifications = Notification::orderBy("created_at", "desc")->paginate();
     
     return view("notifications.index", compact("notifications"));
+  }
+  
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return View
+   */
+  public function show($id): View {
+    $notification = Notification::findOrFail($id);
+    
+    return view("notifications.show", compact("notification"));
   }
   
   /**
