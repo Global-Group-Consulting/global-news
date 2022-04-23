@@ -9,7 +9,7 @@
     @hasSection("title")
       @yield("title") |
     @endif
-    Global News & Eventi</title>
+    Global Communications</title>
 
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}" defer></script>
