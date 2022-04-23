@@ -11,7 +11,7 @@ class News extends Model {
   protected $fillable = ["title", "content", "startAt", "endAt", "coverImg",
     "attachments", "createdBy", "active", "apps"];
   
-  protected $casts = [
+  /*protected $casts = [
     'active' => 'boolean',
-  ];
+  ];*/
 }

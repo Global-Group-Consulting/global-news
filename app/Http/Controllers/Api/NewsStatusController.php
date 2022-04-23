@@ -14,11 +14,17 @@ use MongoDB\BSON\UTCDateTime;
 
 class NewsStatusController extends Controller {
   public function index() {
+    $userId = Auth::id();
     /**
      * @var App $app
      */
     $app  = Session::get('app');
-    $news = News::where("apps", $app["code"])->orderBy("created_at", "desc")->get();
+    $news = News::where([
+      "apps"   => $app["code"],
+      "active" => true,
+      "readStatuses.userId" => ["\$ne" => $userId]
+    ])
+      ->orderBy("created_at", "desc")->get();
   
     return response()->json(array_map(function ($singleNews) {
       $singleNews["coverImg"] = key_exists("coverImg", $singleNews) ? Storage::temporaryUrl($singleNews["coverImg"], now()->addMinutes(5)) : '';
