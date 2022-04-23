@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AppType;
 use App\Enums\NotificationType;
 use App\Enums\PlatformType;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
@@ -34,7 +35,7 @@ class Notification extends Model {
   /**
    * @var string[]
    */
-  protected $fillable = ["title", "content", "coverImg", "app", "type", "receivers", "platforms"];
+  protected $fillable = ["title", "content", "coverImg", "app", "type", "receivers", "platforms", "action"];
   
   /**
    * The model's default values for attributes.
@@ -47,6 +48,12 @@ class Notification extends Model {
     'platforms' => [PlatformType::APP]
   ];
   
+  protected $casts = [
+    'read_at'    => 'datetime',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+  ];
+  
   protected function getReadingsAttribute($value): \Illuminate\Support\Collection {
     return collect($value);
   }
@@ -55,27 +62,4 @@ class Notification extends Model {
     return collect($value);
   }
   
-  public function setAsRead(User $user, $platform) {
-    /**
-     * @var Collection $readings
-     */
-    $readings = $this->readings;
-    $contains = $readings->contains("userId", $user->_id);
-  
-    if ( !$contains) {
-      $readings->push(new NotificationReading([
-        "userId"   => $user->_id,
-        "platform" => $platform
-      ]));
-    }
-  
-    $completed = $readings->count() === $this->receivers->count();
-  
-    if ($completed) {
-      $this->completed = true;
-    }
-  
-    $this->readings = $readings->toArray();
-    $this->save();
-  }
 }
