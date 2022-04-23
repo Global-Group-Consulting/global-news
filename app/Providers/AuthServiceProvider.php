@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider {
   public function boot() {
     $this->registerPolicies();
     
-    Auth::viaRequest('custom-token', function (Request $request) {
+    /*Auth::viaRequest('custom-token', function (Request $request) {
       $headers  = $request->headers;
       $authUser = $request->get("_auth_user");
   
@@ -69,6 +69,6 @@ class AuthServiceProvider extends ServiceProvider {
       Session::put('app', $reqApp);
   
       return User::find($authUser["_id"]);
-    });
+    });*/
   }
 }
