@@ -1,32 +1,34 @@
 @extends("layouts.app")
 
 @section("content")
+  @php($data = (object) $notification->data)
+
   <div class="row justify-content-center">
 
     <div class="col-12 col-md-10 col-xl-10">
 
       <div class="card">
-        <div class="card-header">{{ $notification->title }}</div>
+        <div class="card-header">{{$data->title}}</div>
 
         <div class="card-body">
-          @if($notification->coverImg)
-            <img src="{{$notification->coverImg}}" class="img-fluid mb-4" alt="">
+          @if(property_exists($data, "coverImg"))
+            <img src="{{$data->coverImg}}" class="img-fluid mb-4" alt="">
           @endif
 
           <div class="mb-4 py-4 border-bottom">
-            {!! $notification->content !!}
+            {!! $data->content !!}
           </div>
 
           <div class="">
-            <h3>Destinatari</h3>
+            <h3>Destinataro</h3>
 
             <div class="row row-cols-2 mb-4">
-              @foreach($notification->receivers as $user)
-                <div class="col">
-                  <strong class="card-title">{{ $user["firstName"] }} {{ $user["lastName"] }}</strong>
-                  (<span class="card-text">{{ $user["email"] }}</span>)
-                </div>
-              @endforeach
+              @php($user = (object) $data->receiver)
+
+              <div class="col">
+                <strong class="card-title">{{ $user->firstName }} {{ $user->lastName }}</strong>
+                (<span class="card-text">{{ $user->email }}</span>)
+              </div>
             </div>
           </div>
 
@@ -35,16 +37,22 @@
 
             <div class="row row-cols-2 mb-4">
               <div class="col">
-                Tipologia: <strong>{{$notification->type}}</strong>
+                ID: <strong>{{$notification->id}}</strong>
               </div>
               <div class="col">
-                Piattaforme: <strong>{{join(($notification->platforms ?? []), ", ")}}</strong>
+                Tipologia: <strong>{{$data->type}}</strong>
               </div>
               <div class="col">
-                Letta da tutti i destinatari: <strong>{{$notification->completed ? "Si" : "No"}}</strong>
+                Piattaforme: <strong>{{join(($data->platforms ?? []), ", ")}}</strong>
               </div>
               <div class="col">
-                Visibile nell'App: <strong>{{$notification->app}}</strong>
+                Letta: <strong>{{$notification->read_at ? "Si" : "No"}}
+                  @if($notification->read_at)
+                    ({{ $notification->read_at->format("d/m/Y H:i:s") }})
+                  @endif</strong>
+              </div>
+              <div class="col">
+                Visibile nell'App: <strong>{{$data->app}}</strong>
               </div>
               <div class="col">
                 Data creazione: <strong>{{$notification->created_at->format("d/m/Y H:i:s")}}</strong>
@@ -55,12 +63,6 @@
             </div>
           </div>
 
-          <div class="border-top pt-4">
-            <h3>Letture</h3>
-            <code>
-              <pre>{{json_encode($notification->readings ?? [], JSON_PRETTY_PRINT)}}</pre>
-            </code>
-          </div>
         </div>
       </div>
 

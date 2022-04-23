@@ -24,26 +24,30 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($notifications as $singleNews)
+            @foreach($notifications as $notification)
+              @php($data = (object) $notification->data)
+
               <tr>
-                <th scope="row">{{$singleNews->title}}</th>
-                <td>{{$singleNews->app}}</td>
-                <td>{{$singleNews->type}}</td>
+                <th scope="row">{{$data->title}}</th>
+                <td>{{$data->app}}</td>
+                <td>{{$data->type}}</td>
                 <td>
-                  @foreach($singleNews->receivers as $user)
-                    <div>{{$user["firstName"]}} {{$user["lastName"]}} - {{$user["email"]}}<br><small>({{ $user["_id"] }})</small></div>
-                  @endforeach
+                  @php($user = (object) $data->receiver)
+
+                  <div>{{$user->firstName}} {{$user->lastName}} - {{$user->email}}<br><small>({{ $user->_id }}
+                      )</small></div>
                 </td>
-                <td>{{$singleNews->platforms ? join(",", $singleNews->platforms) : ''}}</td>
+                <td>{{property_exists($data, "platforms") ? join(", ", $data->platforms) : ''}}</td>
                 <td>
-                  @if($singleNews->completed)
-                    <i class="fas fa-check text-success"></i>
+                  @if(!is_null($notification->read_at))
+                    <i class="fas fa-check text-success"
+                       title="{{$notification->read_at->format("d/m/Y H:i:s")}} ({{ $notification->read_from  }}}})"></i>
                   @else
                     <i class="fas fa-pause text-warning"></i>
                   @endif</td>
-                <td>{{$singleNews->created_at->format("d/m/y H:i")}}</td>
+                <td>{{$notification->created_at}}</td>
                 <td>
-                  <a href="{{route('notifications.show', $singleNews->_id)}}" class="btn btn-link">
+                  <a href="{{route('notifications.show', $notification->_id)}}" class="btn btn-link">
                     <i class="fas fa-eye"></i>
                   </a>
                 </td>
