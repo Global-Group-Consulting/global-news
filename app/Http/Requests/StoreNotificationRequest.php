@@ -37,6 +37,10 @@ class StoreNotificationRequest extends FormRequest {
       "receivers.*.firstName" => "required|string",
       "receivers.*.lastName"  => "required|string",
       "receivers.*.email"     => "required|email",
+      "action"                => "required|array",
+      "action.text"           => "required|string",
+      "action.link"           => "required|string",
+      "extraData"             => "nullable|array",
     ];
   }
 }
