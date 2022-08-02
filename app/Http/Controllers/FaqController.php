@@ -108,6 +108,10 @@ class FaqController extends Controller {
   public function update(UpdateFaqRequest $request, Faq $faq) {
     $data = $request->validated();
     
+    if ( !key_exists("active", $data)) {
+      $data["active"] = false;
+    }
+    
     $faq->update($data);
     $faq->save();
     

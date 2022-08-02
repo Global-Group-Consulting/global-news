@@ -24,7 +24,7 @@ class UpdateFaqRequest extends FormRequest {
       "question" => "required",
       "answer"   => "required",
       "apps"     => "required",
-      "active"   => "required|boolean"
+      "active"   => "nullable|boolean"
     ];
   }
 }
