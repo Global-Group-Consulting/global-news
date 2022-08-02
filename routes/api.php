@@ -54,6 +54,13 @@ Route::middleware('auth.customToken')
     Route::patch('/{notification}/read', "NotificationController@read");
     Route::patch('/{notification}/readByContent', "NotificationController@readByContent");
     Route::patch('/{notification}/unread', "NotificationController@unread");
-  
   });
 
+Route::middleware('auth.customToken')
+  ->namespace("\App\Http\Controllers\Api")
+  ->prefix("faqs")
+  ->group(function () {
+    
+    Route::get('/', "FaqController@index");
+//    Route::patch('/{faqs}/read', "NewsStatusController@read");
+  });
