@@ -36,6 +36,13 @@
         Eventi
       </a>
     </li>-->
+    <li>
+      <a href="{{ route('faqs.index') }}"
+         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'faqs.') === 0) ? 'active' : '' }}">
+        <i class="fas fa-question"></i>
+        FAQ
+      </a>
+    </li>
   </ul>
 
 </div>

@@ -8,6 +8,7 @@
         "php": "^7.4|^8.0",
         "ext-mongodb": "^1.12",
         "barryvdh/laravel-debugbar": "^3.6",
+        "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/mongodb": "^3.8",
