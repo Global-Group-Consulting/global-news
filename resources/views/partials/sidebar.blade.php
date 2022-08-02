@@ -2,7 +2,7 @@
      style="width: 280px;">
   <a href="/"
      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-    <span class="fs-4">Global News & Eventi</span>
+    <span class="fs-4">Global Communications</span>
   </a>
   <hr>
   <ul class="nav nav-pills flex-column mb-auto">
