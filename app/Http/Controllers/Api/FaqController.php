@@ -20,11 +20,12 @@ class FaqController extends Controller {
      * @var App $app
      */
     $app = Session::get('app');
-    
+
     $faqs = Faq::where([
-      "apps"   => $app["code"],
       "active" => true,
-    ])->orderBy("question", "asc")
+    ])
+      ->whereJsonContains("apps", "club")
+      ->orderBy("question", "asc")
       ->get();
     
     return response()->json($faqs->toArray());

@@ -22,24 +22,7 @@ class Faq extends Model {
   
   protected $fillable = ["question", "answer", "apps", "active"];
   
-  
-  /**
-   * Get the faq's apps array.
-   *
-   * @return array
-   */
-  public function getAppsAttribute(): array {
-    return explode(",", $this->attributes["apps"]);
-  }
-  
-  /**
-   * Set the faq's apps.
-   *
-   * @param  array  $value
-   *
-   * @return void
-   */
-  public function setAppsAttribute(array $value) {
-    $this->attributes['apps'] = join(",", $value);
-  }
+  protected $casts = [
+    'apps' => 'array'
+  ];
 }
