@@ -116,7 +116,7 @@ class NotificationController extends Controller {
     
     
     foreach ($notifications as $notification) {
-      $extraData = $notification->data["extraData"];
+      $extraData = key_exists("extraData", $notification->data) ? $notification->data["extraData"] : null;
       
       if ($extraData && key_exists("multiReadBy", $extraData) && $extraData["multiReadBy"] == $multiReadBy) {
         $notification->markAsRead($platform);
