@@ -29,7 +29,7 @@ class StoreNotificationRequest extends FormRequest {
       "content"               => "required|string",
       "coverImg"              => "nullable|string",
       "app"                   => ['required', Rule::in([AppType::MAIN, AppType::CLUB, AppType::NEWS])],
-      "type"                  => ["required", Rule::in([NotificationType::NEW_MESSAGE, NotificationType::NEW_NEWS, NotificationType::ORDER_UPDATE])],
+      "type"                  => ["required", Rule::in(NotificationType::ALL)],
       "platforms"             => "array|min:1",
       "platforms.*"           => [Rule::in([PlatformType::APP, PlatformType::PUSH, PlatformType::EMAIL])],
       "receivers"             => "required|array|min:1",
