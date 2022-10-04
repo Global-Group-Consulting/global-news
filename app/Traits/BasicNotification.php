@@ -34,7 +34,7 @@ trait BasicNotification {
     
     $platforms = $this->data["platforms"];
     $viaToUse  = [];
-    
+  
     foreach ($platforms as $platform) {
       switch ($platform) {
         case PlatformType::EMAIL:
@@ -53,7 +53,7 @@ trait BasicNotification {
       }
     }
     
-    return $viaToUse;
+    return collect($viaToUse)->unique()->toArray();
   }
   
   /**
@@ -71,7 +71,7 @@ trait BasicNotification {
     
     return [
       "alias" => join("-", $alias),
-      "data"  => $this->data["extraData"],
+      "data"  => key_exists("extraData", $this->data) ? $this->data["extraData"] : [],
     ];
   }
   

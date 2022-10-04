@@ -7,6 +7,7 @@ use App\Enums\PlatformType;
 use App\Events\NotificationCreated;
 use App\Jobs\SendEmail;
 use App\Models\User;
+use App\Notifications\WPNewSemester;
 use App\Notifications\NewMessage;
 use App\Notifications\NewNews;
 use App\Notifications\OrderUpdate;
@@ -50,7 +51,7 @@ class PropagateNotification {
     $user = User::find($receiver);
     
     $notification["receiver"] = $receiver;
-    
+  
     switch ($notification["type"]) {
       case NotificationType::ORDER_UPDATE:
         Notification::send($user, new OrderUpdate($notification));
@@ -60,6 +61,9 @@ class PropagateNotification {
         break;
       case NotificationType::NEW_MESSAGE:
         Notification::send($user, new NewMessage($notification));
+        break;
+      case NotificationType::WP_NEW_SEMESTER:
+        Notification::send($user, new WPNewSemester($notification));
         break;
       default:
         throw new \Exception("Notification type not found");
