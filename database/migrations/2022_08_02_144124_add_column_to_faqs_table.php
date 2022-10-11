@@ -12,7 +12,9 @@ class AddColumnToFaqsTable extends Migration {
    */
   public function up() {
     Schema::table('faqs', function (Blueprint $table) {
-      $table->boolean("active")->after("answer")->default(true);
+      $table->after("answer", function ($table) {
+        $table->boolean("active")->default(true);
+      });
     });
   }
   

@@ -7,6 +7,7 @@ use App\Enums\PlatformType;
 use App\Events\NotificationCreated;
 use App\Jobs\SendEmail;
 use App\Models\User;
+use App\Notifications\WPBritesToUnlock;
 use App\Notifications\WPNewSemester;
 use App\Notifications\NewMessage;
 use App\Notifications\NewNews;
@@ -64,6 +65,9 @@ class PropagateNotification {
         break;
       case NotificationType::WP_NEW_SEMESTER:
         Notification::send($user, new WPNewSemester($notification));
+        break;
+      case NotificationType::WP_BRITES_TO_UNLOCK:
+        Notification::send($user, new WPBritesToUnlock($notification));
         break;
       default:
         throw new \Exception("Notification type not found");
