@@ -43,7 +43,7 @@
                 Tipologia: <strong>{{$data->type}}</strong>
               </div>
               <div class="col">
-                Piattaforme: <strong>{{join(($data->platforms ?? []), ", ")}}</strong>
+                Piattaforme: <strong>{{join( ", ", ($data->platforms ?? []))}}</strong>
               </div>
               <div class="col">
                 Letta: <strong>{{$notification->read_at ? "Si" : "No"}}
