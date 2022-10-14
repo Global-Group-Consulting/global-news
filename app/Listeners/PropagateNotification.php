@@ -12,9 +12,11 @@ use App\Notifications\WPNewSemester;
 use App\Notifications\NewMessage;
 use App\Notifications\NewNews;
 use App\Notifications\OrderUpdate;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class PropagateNotification {
   protected $availableQueues = [];
@@ -34,7 +36,7 @@ class PropagateNotification {
    * @param  \App\Events\NotificationCreated  $event
    *
    * @return void
-   * @throws \Exception
+   * @throws Exception
    */
   public function handle(NotificationCreated $event) {
     /*
@@ -48,12 +50,22 @@ class PropagateNotification {
     }
   }
   
+  /**
+   * @throws Exception
+   */
   private function dispatchNotification($notification, $receiver) {
     $user = User::find($receiver);
-    
     $notification["receiver"] = $receiver;
-  
-    switch ($notification["type"]) {
+    $className                = Str::ucfirst(Str::camel($notification["type"]));
+    
+    try {
+      // dynamically import the right class
+      Notification::send($user, new ('\App\Notifications\\' . $className)($notification));
+    } catch (Exception $e) {
+      throw new Exception("Notification type not found: " . $notification["type"] . " with name $className");
+    }
+    
+    /*switch ($notification["type"]) {
       case NotificationType::ORDER_UPDATE:
         Notification::send($user, new OrderUpdate($notification));
         break;
@@ -71,7 +83,7 @@ class PropagateNotification {
         break;
       default:
         throw new \Exception("Notification type not found");
-    }
+    }*/
   }
   
 }
