@@ -59,8 +59,10 @@ class PropagateNotification {
     $className                = Str::ucfirst(Str::camel($notification["type"]));
     
     try {
+      $class = '\App\Notifications\\' . $className;
+      
       // dynamically import the right class
-      Notification::send($user, new ('\App\Notifications\\' . $className)($notification));
+      Notification::send($user, new $class($notification));
     } catch (Exception $e) {
       throw new Exception("Notification type not found: " . $notification["type"] . " with name $className");
     }
