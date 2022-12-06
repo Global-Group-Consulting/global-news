@@ -61,7 +61,7 @@ class PropagateNotification {
     try {
       $class = '\App\Notifications\\' . $className;
       
-      // dynamically import the right class
+      // dynamically import the right class.
       Notification::send($user, new $class($notification));
     } catch (Exception $e) {
       throw new Exception("Notification type not found: " . $notification["type"] . " with name $className");
