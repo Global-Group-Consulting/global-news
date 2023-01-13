@@ -14,6 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property string _id
+ * @property array  roles
  */
 class User extends Authenticatable {
   use HasApiTokens, HasFactory, Notifiable, HybridRelations;
@@ -92,5 +93,9 @@ class User extends Authenticatable {
     }
     
     return $data->get();
+  }
+  
+  public function isAdmin(): bool {
+    return collect($this->roles)->contains(fn($value, $key) => in_array($value, ["admin", "super_admin"]));
   }
 }

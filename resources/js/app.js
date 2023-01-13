@@ -4,12 +4,27 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
-require('./dropdowns');
-require('./modals');
-require('./forms');
+require('./bootstrap')
+require('./dropdowns')
+require('./modals')
+require('./forms')
 
-window.Vue = require('vue').default;
+require('tinymce/tinymce.min')
+require('tinymce/themes/silver')
+require('tinymce/models/dom')
+require('tinymce/icons/default')
+
+window.Vue = require('vue').default
+
+window.addEventListener('DOMContentLoaded', function () {
+  tinymce.init({
+    selector: 'textarea.tinymce',
+    skin_url: '/skins/ui/oxide/',
+    content_css: '/skins/content/default/content.min.css',
+    statusbar: false,
+    promotion: false
+  })
+})
 
 /**
  * The following block of code may be used to automatically register your
@@ -23,7 +38,7 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('multiselect', require("vue-multiselect").default);
+Vue.component('multiselect', require('vue-multiselect').default)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,5 +47,5 @@ Vue.component('multiselect', require("vue-multiselect").default);
  */
 
 const app = new Vue({
-  el: '#app',
-});
+  el: '#app'
+})

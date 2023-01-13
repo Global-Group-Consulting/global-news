@@ -17,7 +17,7 @@
     <li>
       <a href="{{ route('news.index') }}"
          class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'news.') === 0) ? 'active' : '' }}">
-        <i class="fas fa-users"></i>
+        <i class="fas fa-newspaper"></i>
         News
       </a>
     </li>
@@ -41,6 +41,13 @@
          class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'faqs.') === 0) ? 'active' : '' }}">
         <i class="fas fa-question"></i>
         FAQ
+      </a>
+    </li>
+    <li>
+      <a href="{{ route('newsletters.index') }}"
+         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'newsletters.') === 0) ? 'active' : '' }}">
+        <i class="fas fa-ad"></i>
+        Newsletter
       </a>
     </li>
   </ul>

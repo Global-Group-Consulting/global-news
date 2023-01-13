@@ -7,11 +7,13 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
-// @import "~@fortawesome/fontawesome-free/css/regular.min.css";
+//@import "~@fortawesome/fontawesome-free/css/regular.min.css";
 @import "~@fortawesome/fontawesome-free/css/solid.min.css";
 @import "~vue-multiselect/dist/vue-multiselect.min.css";
+@import "~tinymce/skins/ui/oxide/skin.min.css";
 
 @import "partials/forms";
+@import "partials/nicEdit";
 @import "partials/images";
 
 main {

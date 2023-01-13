@@ -15,11 +15,6 @@
   <script src="{{ asset('js/app.js') }}" defer></script>
   <script src="https://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -43,19 +38,20 @@
 
           <div class="container">
             @if(session()->has('error'))
-              <div class="alert alert-danger mx-3">
+              <div class="alert alert-danger">
                 {{ session()->get('error') }}
               </div>
             @endif
 
             @if(session()->has('success'))
-              <div class="alert alert-success mx-3">
+              <div class="alert alert-success">
                 {{ session()->get('success') }}
               </div>
             @endif
+
+            @yield('content')
           </div>
 
-          @yield('content')
         </div>
       </div>
     </div>
@@ -64,11 +60,7 @@
 
 @yield("scripts")
 
-<script type="text/javascript">
-  bkLib.onDomLoaded(nicEditors.allTextAreas);
-
-
-</script>
+@livewireScripts
 </body>
 
 </html>
