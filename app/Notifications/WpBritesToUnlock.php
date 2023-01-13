@@ -6,6 +6,6 @@ use App\Traits\BasicNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class WPBritesToUnlock extends Notification {
+class WpBritesToUnlock extends Notification {
   use Queueable, BasicNotification;
 }
