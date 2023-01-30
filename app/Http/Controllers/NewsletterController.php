@@ -6,6 +6,8 @@ use App\Http\Requests\StoreNewsletterRequest;
 use App\Http\Requests\UpdateNewsletterRequest;
 use App\Models\Newsletter;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NewsletterController extends Controller {
@@ -78,6 +80,13 @@ class NewsletterController extends Controller {
   public function update(UpdateNewsletterRequest $request, Newsletter $newsletter) {
     $data = $request->validated();
     
+    $oldImages = collect($newsletter->images());
+    $newImages = Str::matchAll('/(communicator\/wysiwyg(.*?)(?="))/', $data['content']);
+    $diff      = $oldImages->diff($newImages);
+    
+    // before saving the new content, remove the old images that are not present anymore
+    Storage::delete($diff->toArray());
+    
     $newsletter->update($data);
     $newsletter->save();
     
@@ -93,8 +102,11 @@ class NewsletterController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function destroy(Newsletter $newsletter) {
+    // First remove the images from the storage
+    Storage::delete($newsletter->images());
+    
     $newsletter->delete();
-  
+    
     return redirect()->route("newsletters.index")->with(["success" => "Newsletter eliminata correttamente!"]);
   }
 }

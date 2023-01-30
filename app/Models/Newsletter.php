@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Str;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @property int    $id
@@ -28,4 +30,8 @@ class Newsletter extends Model {
     "subject",
     "content",
   ];
+  
+  public function images(): array {
+    return Str::matchAll('/(communicator\/wysiwyg(.*?)(?="))/', $this->content)->toArray();
+  }
 }
