@@ -31,7 +31,10 @@ window.addEventListener('DOMContentLoaded', function () {
     image_advtab: true,
     image_title: true,
     image_uploadtab: true,
-    images_upload_url: 'postAcceptor.php'
+    images_file_types: 'jpg,jpeg,png,gif,webp',
+    image_prepend_url: window.FILE_APP_URL + "/files/",
+    images_upload_url: window.FILE_APP_URL + "/api/wysiwyg",
+    // images_upload_credentials: true
   })
 })
 

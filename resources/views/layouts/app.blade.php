@@ -9,7 +9,12 @@
     @hasSection("title")
       @yield("title") |
     @endif
-    Global Communications</title>
+    Global Communications
+  </title>
+
+  <script>
+    window.FILE_APP_URL = "{{ env('FILE_APP_URL') }}"
+  </script>
 
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}" defer></script>
@@ -17,6 +22,8 @@
 
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+
 </head>
 
 <body>
