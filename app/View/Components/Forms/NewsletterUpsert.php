@@ -6,22 +6,20 @@ use App\Models\Newsletter;
 use Illuminate\View\Component;
 
 class NewsletterUpsert extends Component {
-  public string $method = "POST";
-  public string $actionRoute = "";
-  public Newsletter $newsletter;
+  public Newsletter|null $newsletter;
   
   /**
    * Create a new component instance.
    *
    * @return void
    */
-  public function __construct($method = 'POST', $actionRoute = null, $newsletter = null) {
-    $this->method      = $method;
-    $this->actionRoute = $actionRoute ?? "newsletters.store";
-    $this->newsletter  = $newsletter;
-    
-    // TODO::// fare una variabile dove inseriscco i dati del newsletter, sia old che newsletter.
-    // lato view, limitarmi solo a stampare le varie voci senza controllare da dove prendere i dati
+  public function __construct(public $method = 'POST',
+                              public $actionRoute = "newsletters.store",
+                              public $actionRouteParams = [],
+                              public $submitText = "Crea", public $cancelText = "Annulla",
+                                     $newsletter = null,
+  ) {
+    $this->newsletter = $newsletter ?? $this->createFakeNewsletter();
   }
   
   /**
@@ -31,5 +29,15 @@ class NewsletterUpsert extends Component {
    */
   public function render() {
     return view('components.forms.newsletter_upsert');
+  }
+  
+  private function createFakeNewsletter() {
+    $newsletter             = new Newsletter();
+    $newsletter->subject    = old('subject');
+    $newsletter->content    = old('content');
+    $newsletter->created_at = now();
+    $newsletter->updated_at = now();
+    
+    return $newsletter;
   }
 }

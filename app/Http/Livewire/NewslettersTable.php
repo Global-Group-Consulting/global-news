@@ -22,6 +22,11 @@ class NewslettersTable extends Component {
       "name"  => "status",
     ],
     [
+      "label" => "Invio programmato",
+      "name" => "start_at",
+      "type" => "datetime",
+    ],
+    [
       "label" => "Data creazione",
       "name" => "created_at",
       "type" => "datetime",

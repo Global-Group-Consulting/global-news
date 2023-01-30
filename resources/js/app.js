@@ -10,6 +10,9 @@ require('./modals')
 require('./forms')
 
 require('tinymce/tinymce.min')
+require('tinymce/plugins/image')
+require('tinymce/plugins/link')
+require('tinymce/plugins/media')
 require('tinymce/themes/silver')
 require('tinymce/models/dom')
 require('tinymce/icons/default')
@@ -22,7 +25,13 @@ window.addEventListener('DOMContentLoaded', function () {
     skin_url: '/skins/ui/oxide/',
     content_css: '/skins/content/default/content.min.css',
     statusbar: false,
-    promotion: false
+    promotion: false,
+    plugins: 'image link media',
+    toolbar: 'image link media',
+    image_advtab: true,
+    image_title: true,
+    image_uploadtab: true,
+    images_upload_url: 'postAcceptor.php'
   })
 })
 

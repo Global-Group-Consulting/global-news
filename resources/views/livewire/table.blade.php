@@ -12,10 +12,13 @@
     <tr>
       @foreach($columns as $column)
         <td>
+          @php
+            $value = key_exists("name", $column) ? $row->{$column["name"]} : null;
+          @endphp
           @if($column["type"] == "date")
-            {{\Carbon\Carbon::parse($row->{$column["name"]})->format("d/m/y")}}
+            {{ $value ? \Carbon\Carbon::parse($value)->format("d/m/y") : '' }}
           @elseif($column["type"] == "datetime")
-            {{\Carbon\Carbon::parse($row->{$column["name"]})->format("d/m/y H:i")}}
+            {{ $value ? \Carbon\Carbon::parse($value)->format("d/m/y H:i") : '' }}
           @elseif($column["type"] == "boolean")
             {{$row->{$column["name"]} ? "Si" : "No"}}
           @elseif($column["type"] == "array")

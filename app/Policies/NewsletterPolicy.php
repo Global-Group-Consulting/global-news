@@ -52,7 +52,7 @@ class NewsletterPolicy {
    * @return \Illuminate\Auth\Access\Response|bool
    */
   public function update(User $user, Newsletter $newsletter) {
-    //
+    return $user->isAdmin();
   }
   
   /**

@@ -76,7 +76,13 @@ class NewsletterController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function update(UpdateNewsletterRequest $request, Newsletter $newsletter) {
-    //
+    $data = $request->validated();
+    
+    $newsletter->update($data);
+    $newsletter->save();
+    
+    return redirect()->route("newsletters.index")
+      ->with("success", "Newsletter modificata correttamente");
   }
   
   /**
