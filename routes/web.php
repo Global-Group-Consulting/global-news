@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,8 +26,13 @@ Auth::routes([
   "confirm"  => false
 ]);
 
-Route::middleware("auth")->resource("news", \App\Http\Controllers\NewsController::class);
-Route::middleware("auth")->resource("events", \App\Http\Controllers\EventController::class);
-Route::middleware("auth")->resource("notifications", \App\Http\Controllers\NotificationController::class);
-Route::middleware("auth")->resource("faqs", \App\Http\Controllers\FaqController::class);
-Route::middleware("auth")->resource("newsletters", \App\Http\Controllers\NewsletterController::class);
+
+Route::middleware("auth")
+  ->group(function () {
+    Route::resource("news", \App\Http\Controllers\NewsController::class);
+    Route::resource("events", \App\Http\Controllers\EventController::class);
+    Route::resource("notifications", \App\Http\Controllers\NotificationController::class);
+    Route::resource("faqs", \App\Http\Controllers\FaqController::class);
+    Route::resource("newsletters", \App\Http\Controllers\NewsletterController::class);
+    Route::resource("newsletter_lists", \App\Http\Controllers\NewsletterListController::class);
+  });

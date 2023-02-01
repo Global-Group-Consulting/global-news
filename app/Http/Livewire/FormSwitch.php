@@ -14,4 +14,10 @@ class FormSwitch extends Component {
   public function render() {
     return view('livewire.form-switch');
   }
+  
+  public function onChange() {
+    $this->checked = $this->checked === "1";
+    
+    $this->emit("change:{$this->name}", $this->checked);
+  }
 }

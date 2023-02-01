@@ -23,7 +23,7 @@ class NewslettersTable extends Component {
     ],
     [
       "label" => "Invio programmato",
-      "name" => "start_at",
+      "name" => "scheduled_at",
       "type" => "datetime",
     ],
     [

@@ -15,12 +15,10 @@
 
     <div class="card-body">
       {{-- Data Table --}}
-      <livewire:newsletters-table :newsletters="$newsletters"/>
+      <NewsletterTable :newsletters="{{ json_encode($newsletters) }}">
+        <template v-slot:pagination>{{$newsletters->links()}}</template>
+      </NewsletterTable>
 
-      {{-- Pagination --}}
-      <div class=" d-flex justify-content-center">
-        {{--{{$newsletters->links()}}--}}
-      </div>
     </div>
   </div>
 

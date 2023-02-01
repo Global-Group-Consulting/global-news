@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Newsletter;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 
-class StoreNewsletterRequest extends FormRequest {
+class StoreNewsletterListRequest extends FormRequest {
   /**
    * Determine if the user is authorized to make this request.
    *
    * @return bool
    */
-  public function authorize(Request $request) {
-    return $request->user()->can('create', Newsletter::class);
+  public function authorize() {
+    return true;
   }
   
   /**
@@ -23,9 +21,9 @@ class StoreNewsletterRequest extends FormRequest {
    */
   public function rules() {
     return [
-      "subject" => "required|string",
-      "scheduled_at" => "date",
-      "content" => "required|string",
+      "name" => "required|string",
+      "user_ids" => "nullable|array",
+      "roles" => "nullable|array",
     ];
   }
 }

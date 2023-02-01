@@ -14,6 +14,10 @@ use PhpParser\Node\Expr\Array_;
  * @property string $subject
  * @property string $content
  * @property string $status
+ * @property bool   $send_asap
+ * @property string $scheduled_at        - When the newsletter is scheduled to be sent
+ * @property string $last_attempt_at     - When the newsletter was last sent
+ * @property string $last_attempt_result - The result of the last attempt
  * @property string $created_at
  * @property string $updated_at
  *
@@ -27,6 +31,7 @@ class Newsletter extends Model {
   
   protected $fillable = [
     "list_id",
+    "scheduled_at",
     "subject",
     "content",
   ];

@@ -50,6 +50,13 @@
         Newsletter
       </a>
     </li>
+    <li>
+      <a href="{{ route('newsletter_lists.index') }}"
+         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'newsletter_lists.') === 0) ? 'active' : '' }}">
+        <i class="fas fa-ad"></i>
+        Liste utenti Newsletter
+      </a>
+    </li>
   </ul>
 
 </div>

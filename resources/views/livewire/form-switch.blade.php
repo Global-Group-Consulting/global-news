@@ -2,7 +2,8 @@
   <div class="form-label">&nbsp;</div>
 
   <input class="form-check-input @error($name) is-invalid @enderror" type="checkbox" role="switch"
-         id="{{$name}}Input" name="{{$name}}" value="1" {{ $checked ? 'checked' : '' }}>
+         id="{{$name}}Input" name="{{$name}}" value="1"
+         wire:model="checked" wire:change="onChange">
   <label for="{{$name}}Input" class="form-check-label">
     {{$label}}
   </label>

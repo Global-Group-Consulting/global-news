@@ -23,11 +23,13 @@
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-
+{{--  @inertiaHead--}}
 </head>
 
 <body>
 <div id="app">
+{{--  @inertia--}}
+
   <main class="">
     {{-- sidebar --}}
     <div class="d-flex h-100">
@@ -57,6 +59,8 @@
             @endif
 
             @yield('content')
+
+
           </div>
 
         </div>
@@ -67,7 +71,6 @@
 
 @yield("scripts")
 
-@livewireScripts
 </body>
 
 </html>

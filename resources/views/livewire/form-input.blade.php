@@ -4,7 +4,10 @@
   </label>
   <input type="{{ $type ?? 'text'  }}" class="form-control @error($name) is-invalid @enderror"
          @if(isset($accept)) accept="{{$accept}}" @endif
-         id="{{$name}}Input" name="{{$name}}" value="{{ $value ?? '' }}">
+         id="{{$name}}Input" name="{{$name}}" value="{{ $value ?? '' }}"
+         @if(isset($disabled)) disabled @endif
+      {{$attributes}}
+  >
   @error($name)
   <span class="invalid-feedback" role="alert">
     <strong>{{ $message }}</strong>

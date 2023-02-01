@@ -10,8 +10,23 @@ class FormInput extends Component {
   public $label;
   public $type;
   public $value;
+  public $model;
+  public $formData;
+  public $disabled;
+  public $accept;
   
-  public function render() {
+  public $listeners = ["change:model" => "changeModel"];
+  
+  public function mount() {
+  
+  }
+  
+  public
+  function render() {
     return view('livewire.form-input');
+  }
+  
+  public function changeModel($model) {
+    $this->formData = $model;
   }
 }
