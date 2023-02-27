@@ -13,12 +13,11 @@
           </a>
         </li>
         <li class="nav-item">
-          <button class="btn btn-link nav-link text-danger" data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                  data-bs-id="{{$newsletter->id}}">
-            <i class="fas fa-trash"></i>
-            Elimina
-          </button>
+          <DeleteButton :id="{{$newsletter->id}}"
+                        class="nav-link"
+                        resource="/newsletters"
+                        label>
+          </DeleteButton>
         </li>
       </ul>
 

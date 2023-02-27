@@ -23,9 +23,11 @@ class StoreNewsletterRequest extends FormRequest {
    */
   public function rules() {
     return [
-      "subject" => "required|string",
-      "scheduled_at" => "date",
-      "content" => "required|string",
+      "subject"      => "required|string",
+      "content"      => "required|string",
+      "list_id"      => "required|exists:newsletter_lists,id",
+      "scheduled_at" => "nullable|date",
+      "send_asap"    => "nullable|boolean",
     ];
   }
 }

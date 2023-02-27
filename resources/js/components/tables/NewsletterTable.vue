@@ -1,5 +1,9 @@
 <template>
   <G-Table :columns="columns" :data="data">
+    <template v-slot:cell_list="{data}">
+      {{ data.list?.name }}
+    </template>
+
     <template v-slot:pagination>
       <slot name="pagination"></slot>
     </template>
@@ -33,6 +37,10 @@ export default defineComponent({
         'name': 'status'
       },
       {
+        'label': 'Lista',
+        'name': 'list'
+      },
+      {
         'label': 'Invio programmato',
         'name': 'scheduled_at',
         'type': 'datetime'
@@ -45,7 +53,10 @@ export default defineComponent({
       {
         'label': '',
         'type': 'component',
-        'component': 'newsletter-table-actions'
+        'component': 'crud-actions',
+        'componentProps': {
+          "resource": "newsletters"
+        }
       }
     ]
 

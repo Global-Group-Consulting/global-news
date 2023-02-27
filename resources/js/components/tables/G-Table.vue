@@ -10,9 +10,11 @@
     <tr v-for="row in data">
       <td v-for="column in tableColumns">
 
-        <template v-if="column['type'] !== 'component'">
-          {{ getColumnValue(column, row) }}
-        </template>
+        <slot :name="`cell_${column.name}`" :data="row">
+          <template v-if="column['type'] !== 'component'">
+            {{ getColumnValue(column, row) }}
+          </template>
+        </slot>
 
         <component v-else :is="column['component']"
                    :row="row" :column="column"

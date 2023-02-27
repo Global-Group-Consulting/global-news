@@ -23,8 +23,11 @@ class UpdateNewsletterRequest extends FormRequest {
    */
   public function rules() {
     return [
-      "subject" => "required|string",
-      "content" => "required|string",
+      "subject"      => "required|string",
+      "content"      => "required|string",
+      "list_id"      => "required|exists:mysql.newsletter_lists,id",
+      "scheduled_at" => "nullable|date",
+      "send_asap"    => "nullable|boolean",
     ];
   }
 }

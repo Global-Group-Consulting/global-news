@@ -18,8 +18,12 @@
     <div class="row">
       <div class="col">
         <FormSelect label="Lista destinatari"
-                   name="list_id"
-                   v-model="formData.list_id"
+                    name="list_id"
+                    v-model="formData.list_id"
+                    :options="lists"
+                    option-label="name"
+                    option-value="id"
+                    :errors="errors"
         />
       </div>
     </div>
@@ -29,12 +33,14 @@
         <FormInput label="Data invio" type="datetime-local"
                    name="scheduled_at"
                    v-model="formData.scheduled_at"
-                   :disabled="formData.send_asap"/>
+                   :disabled="formData.send_asap"
+                   :errors="errors"/>
       </div>
       <div class="col d-flex align-items-center">
         <FormSwitch label="Invio immediato"
                     name="send_asap"
-                    v-model="formData.send_asap"/>
+                    v-model="formData.send_asap"
+                    :errors="errors"/>
       </div>
     </div>
 
@@ -42,7 +48,8 @@
       <div class="col">
         <FormTextEditor label="Contenuto"
                         name="content"
-                        v-model="formData.content"/>
+                        v-model="formData.content"
+                        :errors="errors"/>
       </div>
     </div>
 
@@ -66,6 +73,7 @@ export default defineComponent({
   name: 'NewsletterFormUpsert',
   props: {
     newsletter: Object,
+    lists: Array,
     action: String,
     cancelHref: { type: String },
     cancelText: { type: String, default: 'Annulla' },

@@ -25,4 +25,8 @@ class NewsletterList extends Model {
     "user_ids",
     "roles",
   ];
+  
+  public function newsletters(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->belongsTo(Newsletter::class);
+  }
 }

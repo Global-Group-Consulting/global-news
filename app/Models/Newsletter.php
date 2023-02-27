@@ -36,7 +36,16 @@ class Newsletter extends Model {
     "content",
   ];
   
+  protected $dates = [
+    "scheduled_at",
+    "last_attempt_at",
+  ];
+  
   public function images(): array {
     return Str::matchAll('/(communicator\/wysiwyg(.*?)(?="))/', $this->content)->toArray();
+  }
+  
+  public function list(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(NewsletterList::class, "id", "list_id");
   }
 }

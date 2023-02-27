@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreNewsletterRequest;
 use App\Http\Requests\UpdateNewsletterRequest;
 use App\Models\Newsletter;
+use App\Models\NewsletterList;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,8 +18,13 @@ class NewsletterController extends Controller {
    * @return View
    */
   public function index(): View {
+    $data = Newsletter::with("list")
+      ->paginate();
+    
+    $data->makeHidden(['content']);
+    
     return view('newsletters.index', [
-      'newsletters' => Newsletter::paginate(),
+      'newsletters' => $data,
     ]);
   }
   
@@ -28,7 +34,9 @@ class NewsletterController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function create() {
-    return view('newsletters.create');
+    $lists = NewsletterList::all();
+    
+    return view('newsletters.create', compact('lists'));
   }
   
   /**
@@ -66,7 +74,9 @@ class NewsletterController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function edit(Newsletter $newsletter) {
-    return view('newsletters.edit', compact('newsletter'));
+    $lists = NewsletterList::all();
+    
+    return view('newsletters.edit', compact('newsletter', 'lists'));
   }
   
   /**

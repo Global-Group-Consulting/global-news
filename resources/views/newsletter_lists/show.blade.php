@@ -2,9 +2,7 @@
 
 @section("content")
   <div class="row justify-content-center">
-
     <div class="col-12 col-md-10 col-xl-10">
-
       <ul class="nav mb-4 justify-content-center">
         <li class="nav-item">
           <a class="nav-link" href="{{route('newsletter_lists.edit', $newsletterList->id)}}">
@@ -13,12 +11,10 @@
           </a>
         </li>
         <li class="nav-item">
-          <button class="btn btn-link nav-link text-danger" data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                  data-bs-id="{{$newsletterList->id}}">
-            <i class="fas fa-trash"></i>
-            Elimina
-          </button>
+          <DeleteButton class="nav-link"
+                        :resource="newsletter_lists"
+                        :id="{{ $newsletterList->id }}"
+                        label></DeleteButton>
         </li>
       </ul>
 

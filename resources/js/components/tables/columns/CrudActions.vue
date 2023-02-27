@@ -1,23 +1,19 @@
 <template>
-  <a :href="`${resource}/${id}/edit`" class="btn btn-link">
-    <i class="fas fa-edit"></i>
-  </a>
+  <div class="text-nowrap">
+    <a :href="`${resource}/${id}/edit`" class="btn btn-link">
+      <i class="fas fa-edit"></i>
+    </a>
 
-  <a :href="`${resource}/${id}`" class="btn btn-link">
-    <i class="fas fa-eye"></i>
-  </a>
+    <a :href="`${resource}/${id}`" class="btn btn-link">
+      <i class="fas fa-eye"></i>
+    </a>
 
-  <button class="btn btn-link text-danger"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteModal"
-          :data-bs-id="id">
-    <i class="fas fa-trash"></i>
-  </button>
-
+    <DeleteButton :resource="resource" :id="id"></DeleteButton>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeMount, ref } from 'vue'
 
 export default defineComponent({
   name: 'CrudActions',
@@ -26,7 +22,6 @@ export default defineComponent({
     resource: String
   },
   setup (props) {
-
     return {}
   }
 })
