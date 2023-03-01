@@ -59,7 +59,7 @@ class PropagateNotification {
     $className                = Str::ucfirst(Str::camel($notification["type"]));
   
     if ( !$user) {
-      throw new Exception("User not found: " . $receiver["_id"]);
+      $user = User::findOrFail($receiver);
     }
   
     try {
