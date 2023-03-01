@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Enums\PlatformType;
 use App\Jobs\SendEmail;
+use App\Models\User;
 use App\Notifications\drivers\QueueMailChannel;
 use Illuminate\Support\Str;
 
@@ -68,10 +69,24 @@ trait BasicNotification {
     $notificationName = substr($className, strrpos($className, "\\", -1) + 1);
     $notificationName = Str::kebab($notificationName);
     $alias            = [$this->data["app"], $notificationName];
-    
+    $data             = key_exists("extraData", $this->data) ? $this->data["extraData"] : [];
+  
+    if (key_exists("action", $this->data)) {
+      $data["action"] = $this->data["action"];
+    }
+    // check if $notifiable is an instance of User
+    if ($notifiable instanceof User) {
+      $data["receiver"] = [
+        "id"        => $notifiable->id,
+        "email"     => $notifiable->email,
+        "firstName" => $notifiable->firstName,
+        "lastName"  => $notifiable->lastName,
+      ];
+    }
+  
     return [
       "alias" => join("-", $alias),
-      "data"  => key_exists("extraData", $this->data) ? $this->data["extraData"] : [],
+      "data"  => $data,
     ];
   }
   

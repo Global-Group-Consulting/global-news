@@ -54,38 +54,19 @@ class PropagateNotification {
    * @throws Exception
    */
   private function dispatchNotification($notification, $receiver) {
-    $user = User::find($receiver);
+    // fetch user by _id
+    $user                     = User::find($receiver["_id"] ?? $receiver["id"]);
     $notification["receiver"] = $receiver;
     $className                = Str::ucfirst(Str::camel($notification["type"]));
-    
+  
     try {
       $class = '\App\Notifications\\' . $className;
-      
+    
       // dynamically import the right class.
       Notification::send($user, new $class($notification));
     } catch (Exception $e) {
       throw new Exception("Notification type not found: " . $notification["type"] . " with name $className");
     }
-    
-    /*switch ($notification["type"]) {
-      case NotificationType::ORDER_UPDATE:
-        Notification::send($user, new OrderUpdate($notification));
-        break;
-      case NotificationType::NEW_NEWS:
-        Notification::send($user, new NewNews($notification));
-        break;
-      case NotificationType::NEW_MESSAGE:
-        Notification::send($user, new NewMessage($notification));
-        break;
-      case NotificationType::WP_NEW_SEMESTER:
-        Notification::send($user, new WPNewSemester($notification));
-        break;
-      case NotificationType::WP_BRITES_TO_UNLOCK:
-        Notification::send($user, new WPBritesToUnlock($notification));
-        break;
-      default:
-        throw new \Exception("Notification type not found");
-    }*/
   }
   
 }
