@@ -54,8 +54,7 @@ class PropagateNotification {
    * @throws Exception
    */
   private function dispatchNotification($notification, $receiver) {
-    // fetch user by _id
-    $user                     = User::find($receiver["_id"] ?? $receiver["id"]);
+    $user                     = User::find($receiver["_id"] ?? $receiver);
     $notification["receiver"] = $receiver;
     $className                = Str::ucfirst(Str::camel($notification["type"]));
   
