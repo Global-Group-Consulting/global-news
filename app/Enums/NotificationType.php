@@ -10,6 +10,7 @@ abstract class NotificationType {
   const WP_BRITES_TO_UNLOCK = "wpBritesToUnlock";
   const CLUB_PACK_DOWNGRADE = "clubPackDowngrade";
   const CLUB_PACK_EXPIRING = "clubPackExpiring";
+  const CALENDAR_UPDATE = "calendarUpdate";
   
   const ALL = [
     self::ORDER_UPDATE,
@@ -19,6 +20,7 @@ abstract class NotificationType {
     self::WP_BRITES_TO_UNLOCK,
     self::CLUB_PACK_DOWNGRADE,
     self::CLUB_PACK_EXPIRING,
+    self::CALENDAR_UPDATE,
   ];
   
 }
