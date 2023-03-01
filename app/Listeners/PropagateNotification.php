@@ -54,9 +54,13 @@ class PropagateNotification {
    * @throws Exception
    */
   private function dispatchNotification($notification, $receiver) {
-    $user                     = User::find($receiver["_id"] ?? $receiver);
+    $user                     = User::where("_id", $receiver["_id"])->first();
     $notification["receiver"] = $receiver;
     $className                = Str::ucfirst(Str::camel($notification["type"]));
+  
+    if ( !$user) {
+      throw new Exception("User not found: " . $receiver["_id"]);
+    }
   
     try {
       $class = '\App\Notifications\\' . $className;
