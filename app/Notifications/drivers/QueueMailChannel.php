@@ -8,6 +8,7 @@ use App\Models\JobList;
 use App\Models\User;
 use App\Traits\BasicNotification;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class QueueMailChannel {
   /**
@@ -27,6 +28,13 @@ class QueueMailChannel {
     
     /** @var mixed $email */
     $email = $notification->toQueueMail($notifiable);
+    
+    Log::log("info", "dispatching send email on " . $job->queueName, [
+      "to"           => $notifiable->email,
+      "from"         => $app->emailsFrom,
+      "alias"        => $email["alias"],
+      "templateData" => $email["data"],
+    ]);
     
     SendEmail::dispatch([
       "to"           => $notifiable->email,
