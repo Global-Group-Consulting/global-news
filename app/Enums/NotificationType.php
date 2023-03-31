@@ -11,6 +11,7 @@ abstract class NotificationType {
   const CLUB_PACK_DOWNGRADE = "clubPackDowngrade";
   const CLUB_PACK_EXPIRING = "clubPackExpiring";
   const CALENDAR_UPDATE = "calendarUpdate";
+  const ACCOUNT_APPROVED = "accountApproved";
   
   const ALL = [
     self::ORDER_UPDATE,
@@ -21,6 +22,7 @@ abstract class NotificationType {
     self::CLUB_PACK_DOWNGRADE,
     self::CLUB_PACK_EXPIRING,
     self::CALENDAR_UPDATE,
+    self::ACCOUNT_APPROVED,
   ];
   
 }
