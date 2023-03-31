@@ -6,6 +6,7 @@ use App\Enums\PlatformType;
 use App\Jobs\SendEmail;
 use App\Models\User;
 use App\Notifications\drivers\QueueMailChannel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait BasicNotification {
@@ -53,6 +54,9 @@ trait BasicNotification {
           break;
       }
     }
+    
+    dump($viaToUse);
+    Log::log("info", "viaToUse", $viaToUse);
     
     return collect($viaToUse)->unique()->toArray();
   }
