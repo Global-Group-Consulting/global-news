@@ -15,6 +15,8 @@ abstract class NotificationType {
   
   // main app notifications
   const MESSAGE_CHAT = "messageChat";
+  const MESSAGE_REPORT = "messageReport";
+  const MESSAGE_COMMUNICATION = "messageCommunication";
   
   const REQUEST_DEPOSIT = "requestDeposit";
   const REQUEST_DEPOSIT_COLLECT = "requestDepositCollect";
@@ -41,6 +43,8 @@ abstract class NotificationType {
     
     // Messages
     self::MESSAGE_CHAT,
+    self::MESSAGE_REPORT,
+    self::MESSAGE_COMMUNICATION,
     
     // Requests
     self::REQUEST_DEPOSIT,
