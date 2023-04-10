@@ -13,6 +13,19 @@ abstract class NotificationType {
   const CALENDAR_UPDATE = "calendarUpdate";
   const ACCOUNT_APPROVED = "accountApproved";
   
+  // main app notifications
+  const MESSAGE_CHAT = "messageChat";
+  
+  const REQUEST_DEPOSIT = "requestDeposit";
+  const REQUEST_DEPOSIT_COLLECT = "requestDepositCollect";
+  const REQUEST_GOLD = "requestGold";
+  const REQUEST_APPROVED = "requestApproved";
+  const REQUEST_REJECTED = "requestRejected";
+  const REQUEST_CANCELLED = "requestCancelled";
+  
+  const PASSWORD_RECOVER = "passwordRecover";
+  const PASSWORD_FORGOT = "passwordForgot";
+  
   const ALL = [
     self::ORDER_UPDATE,
     self::NEW_MESSAGE,
@@ -23,6 +36,23 @@ abstract class NotificationType {
     self::CLUB_PACK_EXPIRING,
     self::CALENDAR_UPDATE,
     self::ACCOUNT_APPROVED,
+    
+    // main app notifications
+    
+    // Messages
+    self::MESSAGE_CHAT,
+    
+    // Requests
+    self::REQUEST_DEPOSIT,
+    self::REQUEST_DEPOSIT_COLLECT,
+    self::REQUEST_GOLD,
+    self::REQUEST_APPROVED,
+    self::REQUEST_REJECTED,
+    self::REQUEST_CANCELLED,
+    
+    // Password
+    self::PASSWORD_RECOVER,
+    self::PASSWORD_FORGOT,
   ];
   
 }

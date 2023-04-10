@@ -72,12 +72,20 @@ trait BasicNotification {
     $className        = get_class($this);
     $notificationName = substr($className, strrpos($className, "\\", -1) + 1);
     $notificationName = Str::kebab($notificationName);
-    $alias            = [$this->data["app"], $notificationName];
-    $data             = key_exists("extraData", $this->data) ? $this->data["extraData"] : [];
-  
+    
+    if ($notificationName === "polymorphic-notification") {
+      $notificationName = Str::kebab($this->data["type"]);
+    }
+    
+    dump($notificationName);
+    
+    $alias = [$this->data["app"], $notificationName];
+    $data  = key_exists("extraData", $this->data) ? $this->data["extraData"] : [];
+    
     if (key_exists("action", $this->data)) {
       $data["action"] = $this->data["action"];
     }
+    
     // check if $notifiable is an instance of User
     if ($notifiable instanceof User) {
       $data["receiver"] = [
