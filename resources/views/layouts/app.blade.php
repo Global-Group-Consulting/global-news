@@ -53,18 +53,19 @@
                 {{ session()->get('success') }}
               </div>
             @endif
-          </div>
 
-          @yield('content')
+            @yield('content')
+
+          </div>
         </div>
       </div>
     </div>
   </main>
 </div>
 
-@yield("scripts")
+  @yield("scripts")
 
-<script type="text/javascript">
+  <script type="text/javascript">
   bkLib.onDomLoaded(nicEditors.allTextAreas);
 
 
