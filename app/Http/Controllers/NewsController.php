@@ -6,6 +6,7 @@ use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
 use App\Models\App;
 use App\Models\News;
+use App\Traits\WithAppOptions;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -15,19 +16,7 @@ use Illuminate\Support\ViewErrorBag;
 use Illuminate\View\View;
 
 class NewsController extends Controller {
-  private function getAppsOptions() {
-    $apps        = App::all();
-    $appsOptions = [];
-    
-    foreach ($apps as $app) {
-      $appsOptions[] = [
-        "value" => $app->code,
-        "text"  => $app->title
-      ];
-    }
-    
-    return $appsOptions;
-  }
+  use WithAppOptions;
   
   /**
    * Display a listing of the resource.
