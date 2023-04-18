@@ -10,6 +10,7 @@ use App\Traits\WithAppOptions;
 use App\Traits\WithCoverImg;
 use App\View\Components\Tables\EventActions;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class EventController extends Controller {
@@ -62,9 +63,9 @@ class EventController extends Controller {
    *
    * @param  UpsertEventRequest  $request
    *
-   * @return \Illuminate\Http\Response
+   * @return RedirectResponse
    */
-  public function store(UpsertEventRequest $request) {
+  public function store(UpsertEventRequest $request): RedirectResponse {
     $data = $request->validated();
     
     $this->upsertCoverImg($request, $data, "events");
@@ -74,13 +75,13 @@ class EventController extends Controller {
     
     $event->save();
     
-    return redirect()->route("events.index");
+    return redirect()->route("events.show", $event->_id);
   }
   
   /**
    * Display the specified resource.
    *
-   * @param  \App\Models\Event  $event
+   * @param  Event  $event
    *
    * @return View
    */
@@ -93,7 +94,7 @@ class EventController extends Controller {
   /**
    * Show the form for editing the specified resource.
    *
-   * @param  \App\Models\Event  $event
+   * @param  Event  $event
    *
    * @return View
    */
@@ -109,9 +110,9 @@ class EventController extends Controller {
    * @param  UpsertEventRequest  $request
    * @param  Event               $event
    *
-   * @return
+   * @return RedirectResponse
    */
-  public function update(UpsertEventRequest $request, Event $event) {
+  public function update(UpsertEventRequest $request, Event $event): RedirectResponse {
     $data = $request->validated();
     
     $this->upsertCoverImg($request, $data, "events", $event);
@@ -125,11 +126,11 @@ class EventController extends Controller {
   /**
    * Remove the specified resource from storage.
    *
-   * @param  \App\Models\Event  $event
+   * @param  Event  $event
    *
-   * @return \Illuminate\Http\Response
+   * @return RedirectResponse
    */
-  public function destroy(Event $event) {
+  public function destroy(Event $event): RedirectResponse {
     $this->deleteCoverImg($event->coverImg);
     $event->delete();
     

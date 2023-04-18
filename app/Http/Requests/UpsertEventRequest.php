@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Client\Request;
 
 class UpsertEventRequest extends FormRequest {
   /**
@@ -24,12 +25,12 @@ class UpsertEventRequest extends FormRequest {
       "title"    => "required|string",
       "content"  => "required|string",
       "startAt"  => "required|date",
-      "endAt"    => "required|date",
+      //"endAt"    => "required|date",
       "seats"    => "required|int",
       "active"   => "boolean",
       "bookable" => "boolean",
       "apps"     => "required",
-      "coverImg" => "nullable|file"
+      "coverImg" => ["image", ($this->routeIs("events.update") ? "nullable" : "required")]
     ];
   }
 }
