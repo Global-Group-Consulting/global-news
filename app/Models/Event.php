@@ -5,6 +5,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Query\Builder;
 use MongoDB\BSON\ObjectId;
@@ -29,6 +31,10 @@ use MongoDB\BSON\ObjectId;
 class Event extends Model {
   use HasFactory;
   
+  protected $appends = [
+    "coverImgUrl"
+  ];
+  
   protected $fillable = [
     "title",
     "content",
@@ -41,8 +47,12 @@ class Event extends Model {
     "coverImg",
   ];
   
+  protected $casts = [
+    "startAt" => "datetime"
+  ];
+  
   protected $dates = [
-    "startAt",
+//    "startAt",
     "endAt",
   ];
   
@@ -50,6 +60,10 @@ class Event extends Model {
     $dayStart = Carbon::now()->startOf("day");
     
     return $this->startAt->isBefore($dayStart);
+  }
+  
+  public function reservations() {
+    return $this->hasMany(EventReservation::class, "eventId", "_id");
   }
   
   protected function setCreatedByAttribute($value) {
@@ -67,4 +81,15 @@ class Event extends Model {
   protected function setSeatsAttribute($value) {
     $this->attributes["seats"] = (int) $value;
   }
+  
+  protected function setStartAtAttribute($value) {
+    $date = Carbon::parse($value, Cookie::get("global-tz"))->setTimezone('UTC');
+    
+    $this->attributes["startAt"] = $this->fromDateTime($date);
+  }
+  
+  protected function getCoverImgUrlAttribute() {
+    return $this->coverImg ? Storage::url($this->coverImg) : '';
+  }
+  
 }

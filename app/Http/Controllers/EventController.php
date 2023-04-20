@@ -11,6 +11,7 @@ use App\Traits\WithCoverImg;
 use App\View\Components\Tables\EventActions;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\View\View;
 
 class EventController extends Controller {
@@ -34,7 +35,7 @@ class EventController extends Controller {
   public function index(): View {
     $tableStructure = [
       ["title" => "Titolo", "key" => "title"],
-      ["title" => "Data Inizio", "key" => "startAt", "value" => fn(Event $row) => (new Carbon($row->startAt))->format("d/m/Y")],
+      ["title" => "Data Inizio", "key" => "startAt", "value" => fn(Event $row) => (new Carbon($row->startAt))->setTimezone(Cookie::get("global-tz"))->format("d/m/Y H:i")],
       ["title" => "Prenotabile", "key" => "bookable", "value" => fn(Event $row) => $row->bookable ? "Si" : "No"],
       ["title" => "Posti", "key" => "seats", "value" => fn(Event $row) => $row->seats . "/" . $row->seats],
       ["title" => "Stato", "key" => "active", "value" => fn(Event $row) => $row->active ? "Attivo" : "Non Attivo"],

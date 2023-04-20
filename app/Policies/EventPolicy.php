@@ -53,7 +53,8 @@ class EventPolicy {
    * @return \Illuminate\Auth\Access\Response|bool
    */
   public function update(User $user, Event $event) {
-    return !$event->isPast();
+//    return !$event->isPast();
+    return true;
   }
   
   /**

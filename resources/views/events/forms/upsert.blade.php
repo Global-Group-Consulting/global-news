@@ -48,7 +48,7 @@
         "label" => "Data Inizio",
         "name" => "startAt",
         "type"=> "datetime-local",
-        "value" => old("startAt", $event->startAt)
+        "value" => old("startAt", $event->startAt->setTimezone(Cookie::get("global-tz")))
       ])
     </div>
 

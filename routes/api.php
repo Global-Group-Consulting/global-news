@@ -32,6 +32,17 @@ Route::post("/testNotification", function (\Illuminate\Http\Request $request) {
 
 Route::middleware('auth.customToken')
   ->namespace("\App\Http\Controllers\Api")
+  ->prefix("events")
+  ->group(function () {
+    
+    Route::get('/', "EventController@index");
+    Route::get('/{event}', "EventController@show");
+    Route::get('/{event}/reservations', "EventReservationController@index");
+    Route::POST('/{event}/reservations', "EventReservationController@store");
+  });
+
+Route::middleware('auth.customToken')
+  ->namespace("\App\Http\Controllers\Api")
   ->prefix("news")
   ->group(function () {
     

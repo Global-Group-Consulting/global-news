@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateNewsRequest;
 use App\Models\App;
 use App\Models\News;
 use App\Traits\WithAppOptions;
+use App\Traits\WithCoverImg;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -16,7 +17,7 @@ use Illuminate\Support\ViewErrorBag;
 use Illuminate\View\View;
 
 class NewsController extends Controller {
-  use WithAppOptions;
+  use WithAppOptions, WithCoverImg;
   
   /**
    * Display a listing of the resource.
@@ -51,10 +52,9 @@ class NewsController extends Controller {
    */
   public function store(StoreNewsRequest $request): RedirectResponse {
     $data = $request->validated();
-  
-    if (key_exists("coverImg", $data)) {
-      $data["coverImg"] = $request->file("coverImg")->store("news", []);
-    }
+    
+    $this->upsertCoverImg($request, $data, "news");
+    
     $data["content"] = trim($data["content"]);
     $data["active"]  = key_exists("active", $data) && (bool) $data["active"];
   
@@ -101,14 +101,7 @@ class NewsController extends Controller {
   public function update(UpdateNewsRequest $request, News $news): RedirectResponse {
     $data = $request->validated();
     
-    if ($request->file("coverImg")) {
-      // if already has an image, delete the current one and then upload the new one
-      if ($news->coverImg) {
-        Storage::delete($news->coverImg);
-      }
-      
-      $data["coverImg"] = $request->file("coverImg")->store("news", []);
-    }
+    $this->upsertCoverImg($request, $data, "news", $news);
   
     $data["active"]  = key_exists("active", $data) && (bool) $data["active"];
     
@@ -125,9 +118,7 @@ class NewsController extends Controller {
    * @return RedirectResponse
    */
   public function destroy(News $news): RedirectResponse {
-    if ($news->coverImg) {
-      Storage::delete($news->coverImg);
-    }
+    $this->deleteCoverImg($news->coverImg);
     
     $news->delete();
     

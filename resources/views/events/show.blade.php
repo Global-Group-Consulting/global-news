@@ -39,7 +39,7 @@
     </div>
 
     <div>
-      Data inizio: <strong>{{$event->startAt->format("d/m/Y H:i") ?? "*"}}</strong>
+      Data inizio: <strong>{{$event->startAt->setTimezone(Cookie::get("global-tz"))->format("d/m/Y H:i") ?? "*"}}</strong>
       {{--      al <strong>{{$event->endAt->format("d/m/Y H:i") ?? "*"}}</strong>--}}
     </div>
 

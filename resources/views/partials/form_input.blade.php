@@ -1,5 +1,5 @@
 @php
-  $hasFilePreview = isset($type) && $type === 'file' && $value;
+  $hasFilePreview = isset($type) && $type === 'file' && isset($value) && $value;
 @endphp
 
 <div class="mb-3 {{$hasFilePreview ? 'd-flex' : ''}}">
