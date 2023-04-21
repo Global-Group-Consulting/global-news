@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Query\Builder;
+use MongoDB\BSON\ObjectId;
 
 /**
  * @property string      $eventId
@@ -24,7 +25,12 @@ class EventReservation extends Model {
     "eventId",
     "userId",
     "status",
+    "statusUpdatedAt",
     "companions",
+  ];
+  
+  protected $dates = [
+    "statusUpdatedAt",
   ];
   
   public function event() {
@@ -40,5 +46,17 @@ class EventReservation extends Model {
         "email",
         "role",
       ]);
+  }
+  
+  public function setUserIdAttribute($value) {
+    $this->attributes["userId"] = new ObjectId($value);
+  }
+  
+  public function setEventIdAttribute($value) {
+    $this->attributes["eventId"] = new ObjectId($value);
+  }
+  
+  public function getIdAttribute($value = null) {
+    return $value;
   }
 }

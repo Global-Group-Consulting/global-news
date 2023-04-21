@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EventReservationStatus;
 use Carbon\Carbon;
 use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Jenssegers\Mongodb\Query\Builder;
 use MongoDB\BSON\ObjectId;
 
 /**
- * @property string        $title
+ * @property string $title
  * @property string        $content
  * @property Date          $startAt
  * @property Date          $endAt
@@ -32,7 +33,8 @@ class Event extends Model {
   use HasFactory;
   
   protected $appends = [
-    "coverImgUrl"
+    "coverImgUrl",
+    "reservedSeats",
   ];
   
   protected $fillable = [
@@ -66,6 +68,12 @@ class Event extends Model {
     return $this->hasMany(EventReservation::class, "eventId", "_id");
   }
   
+  public function remainingSeats() {
+    $count = $this->reservations()->where("status", EventReservationStatus::ACCEPTED)->count();
+    
+    return $this->seats - $count;
+  }
+  
   protected function setCreatedByAttribute($value) {
     $this->attributes["createdBy"] = new ObjectId($value);
   }
@@ -88,8 +96,15 @@ class Event extends Model {
     $this->attributes["startAt"] = $this->fromDateTime($date);
   }
   
+  public function getIdAttribute($value = null) {
+    return $value;
+  }
+  
   protected function getCoverImgUrlAttribute() {
     return $this->coverImg ? Storage::url($this->coverImg) : '';
   }
   
+  protected function getReservedSeatsAttribute($value) {
+    return $this->reservations()->where("status", EventReservationStatus::ACCEPTED)->count();
+  }
 }

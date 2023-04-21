@@ -94,4 +94,10 @@ class User extends Authenticatable {
     
     return $data->get();
   }
+  
+  public function isAdmin() {
+    $roles = collect($this->roles);
+    
+    return $roles->has(["admin", "super_admin"]);
+  }
 }
