@@ -48,7 +48,7 @@
         Posti totali: <strong>{{$event->seats}}</strong>
       </div>
       <div class="col">
-        Posti rimanenti: <strong>{{$event->seats}}</strong>
+        Posti rimanenti: <strong>{{$event->remainingSeats()}}</strong>
       </div>
     </div>
 

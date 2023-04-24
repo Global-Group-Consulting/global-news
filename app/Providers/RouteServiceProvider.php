@@ -59,7 +59,7 @@ class RouteServiceProvider extends ServiceProvider
       // try to read the incoming user. This because the user is not yet authenticated due to the proxy server
       $authUser = $request->get("_auth_user") ?? $request->user();
       
-      if ( !($authUser instanceof User)) {
+      if ($authUser && !($authUser instanceof User)) {
         $authUser = User::find($authUser["_id"]);
       }
       

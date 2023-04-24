@@ -12,6 +12,8 @@ use MongoDB\BSON\ObjectId;
  * @property string      $userId
  * @property string      $status
  * @property string      $companions // JSON
+ * @property string      $passCode   // unique code generated on approval
+ * @property string      $passQr     // qr code generated on approval
  * @property-read string $_id
  * @property-read string $created_at
  * @property-read string $updated_at
@@ -48,6 +50,10 @@ class EventReservation extends Model {
       ]);
   }
   
+  public function accesses() {
+    return $this->hasMany(EventAccess::class, "reservationId", "_id");
+  }
+  
   public function setUserIdAttribute($value) {
     $this->attributes["userId"] = new ObjectId($value);
   }
@@ -58,5 +64,12 @@ class EventReservation extends Model {
   
   public function getIdAttribute($value = null) {
     return $value;
+  }
+  
+  public function registerAccess() {
+    $this->accesses()->create([
+      "eventId"  => $this->eventId,
+      "accessAt" => now(),
+    ]);
   }
 }

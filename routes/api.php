@@ -77,3 +77,17 @@ Route::middleware('auth.customToken')
     Route::get('/', "FaqController@index");
 //    Route::patch('/{faqs}/read', "NewsStatusController@read");
   });
+
+Route::namespace("\App\Http\Controllers\CronAuth")
+  ->group(function () {
+    Route::post("/login", "AuthenticationController@login")
+      ->middleware("auth.cronUser");
+  });
+
+Route::namespace("\App\Http\Controllers\QrPass")
+  ->middleware('auth:sanctum')
+  ->prefix("qrpass")
+  ->group(function () {
+    Route::get("/events", "EventController@index");
+    Route::post("/check", "EventController@check");
+  });

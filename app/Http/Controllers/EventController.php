@@ -37,7 +37,7 @@ class EventController extends Controller {
       ["title" => "Titolo", "key" => "title"],
       ["title" => "Data Inizio", "key" => "startAt", "value" => fn(Event $row) => (new Carbon($row->startAt))->setTimezone(Cookie::get("global-tz"))->format("d/m/Y H:i")],
       ["title" => "Prenotabile", "key" => "bookable", "value" => fn(Event $row) => $row->bookable ? "Si" : "No"],
-      ["title" => "Posti", "key" => "seats", "value" => fn(Event $row) => $row->seats . "/" . $row->seats],
+      ["title" => "Posti", "key" => "seats", "value" => fn(Event $row) => $row->remainingSeats() . "/" . $row->seats],
       ["title" => "Stato", "key" => "active", "value" => fn(Event $row) => $row->active ? "Attivo" : "Non Attivo"],
       ["title" => "App", "key" => "apps", "value" => fn(Event $row) => implode(", ", $row->apps)],
       ["title" => "", "key" => "actions", "value" => fn(Event $row, $readonly) => (new EventActions($row, $readonly))->render()],

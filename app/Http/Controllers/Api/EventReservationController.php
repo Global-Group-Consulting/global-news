@@ -9,9 +9,12 @@ use App\Models\EventReservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use MongoDB\BSON\ObjectId;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class EventReservationController extends Controller {
@@ -107,8 +110,49 @@ class EventReservationController extends Controller {
       "statusUpdatedAt" => now(),
     ]);
     
+    if ($data["status"] === EventReservationStatus::ACCEPTED) {
+      // if the reservation is accepted, we must generate the pass, upload it to the cloud and add passUrl to the reservation
+      $reservation->passCode = uniqid(null);
+      $reservation->passQr   = $this->generatePass($reservation);
+    } else {
+      $this->destroyPass($reservation);
+      $reservation->passCode = null;
+      $reservation->passQr   = null;
+    }
+    
     $reservation->save();
     
     return $reservation;
+  }
+  
+  public function generatePass(EventReservation $reservation): string {
+    $data = [
+      "reservationId" => $reservation->_id->__toString(),
+      "eventId"       => $reservation->eventId->__toString(),
+      "passCode"      => $reservation->passCode,
+    ];
+    
+    $qrCode = QrCode::encoding('UTF-8')
+      ->size(400)
+      ->style('round')
+      ->eye('circle')
+      ->margin(3)
+      ->format("svg")
+      ->generate(json_encode($data));
+    
+    $fileName = Str::uuid() . ".svg";
+    $path     = "events/{$reservation->eventId}/passes/$fileName";
+    
+    Storage::put($path, $qrCode, "public");
+    
+    return $path;
+  }
+  
+  public function destroyPass(EventReservation $reservation) {
+    if ( !$reservation->passQr) {
+      return;
+    }
+    
+    Storage::delete($reservation->passQr);
   }
 }
