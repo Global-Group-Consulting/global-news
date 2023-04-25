@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\EventReservationStatus;
+use \Illuminate\Support\Env;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Query\Builder;
@@ -11,9 +13,10 @@ use MongoDB\BSON\ObjectId;
  * @property string      $eventId
  * @property string      $userId
  * @property string      $status
- * @property array       $companions // JSON
- * @property string      $passCode   // unique code generated on approval
- * @property string      $passQr     // qr code generated on approval
+ * @property array       $companions  // JSON
+ * @property string      $passCode    // unique code generated on approval
+ * @property string      $passQr      // qr code generated on approval
+ * @property string      $passUrl     // qr code generated on approval
  * @property-read string $_id
  * @property-read string $created_at
  * @property-read string $updated_at
@@ -22,6 +25,10 @@ use MongoDB\BSON\ObjectId;
  */
 class EventReservation extends Model {
   use HasFactory;
+  
+  protected $appends = [
+    "passUrl",
+  ];
   
   protected $fillable = [
     "eventId",
@@ -64,6 +71,14 @@ class EventReservation extends Model {
   
   public function getIdAttribute($value = null) {
     return $value;
+  }
+  
+  public function getPassUrlAttribute() {
+    if ($this->status !== EventReservationStatus::ACCEPTED) {
+      return null;
+    }
+    
+    return Env::get("APP_URL") . "/events/" . $this->eventId . "/reservations/" . $this->_id . "/pass";
   }
   
   public function registerAccess() {

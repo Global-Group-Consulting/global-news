@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\EventReservationStatus;
+use App\Enums\NotificationType;
+use App\Enums\PlatformType;
 use App\Http\Controllers\Controller;
+use App\Jobs\CreateNotification;
 use App\Models\Event;
 use App\Models\EventReservation;
+use App\Notifications\EventReservationUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -131,7 +136,15 @@ class EventReservationController extends Controller {
     
     $reservation->save();
     
+    if ($data["status"] === EventReservationStatus::ACCEPTED) {
+      $this->sendPassEmail($reservation, $event);
+    }
+    
     return $reservation;
+  }
+  
+  public function statusNotify(Event $event, EventReservation $reservation) {
+    $this->sendPassEmail($reservation, $event);
   }
   
   public function generatePass(EventReservation $reservation): string {
@@ -163,5 +176,28 @@ class EventReservationController extends Controller {
     }
     
     Storage::delete($reservation->passQr);
+  }
+  
+  public function sendPassEmail(EventReservation $reservation, Event $event) {
+    if ( !$reservation->passUrl) {
+      Log::log("error", "Pass url not found for reservation {$reservation->_id->__toString()}");
+      return;
+    }
+    
+    $reservation->user->sendNotification([
+      "title"     => "Richiesta di partecipazione accettata",
+      "content"   => "La richiesta di partecipazione all'evento ”{$event->title}” è stata accettata",
+      "coverImg"  => "nullable|string",
+      "type"      => NotificationType::EVENT_RESERVATION_UPDATE,
+      "platforms" => [PlatformType::APP, PlatformType::PUSH, PlatformType::EMAIL],
+      "action"    => [
+        "text" => "Visualizza il pass",
+        "link" => $reservation->passUrl,
+      ],
+    ], [
+      "eventName" => $event->title,
+      "status"    => __("enums.EventReservationStatus.{$reservation->status}", [], "it"),
+      "accepted"  => $reservation->status === EventReservationStatus::ACCEPTED,
+    ]);
   }
 }
