@@ -15,6 +15,7 @@ class EventAccess extends Model {
   protected $fillable = [
     "reservationId",
     "eventId",
+    "userId",
     "accessAt",
   ];
   

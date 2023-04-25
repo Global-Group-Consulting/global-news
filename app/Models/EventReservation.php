@@ -11,7 +11,7 @@ use MongoDB\BSON\ObjectId;
  * @property string      $eventId
  * @property string      $userId
  * @property string      $status
- * @property string      $companions // JSON
+ * @property array       $companions // JSON
  * @property string      $passCode   // unique code generated on approval
  * @property string      $passQr     // qr code generated on approval
  * @property-read string $_id
@@ -69,6 +69,7 @@ class EventReservation extends Model {
   public function registerAccess() {
     $this->accesses()->create([
       "eventId"  => $this->eventId,
+      "userId"   => $this->userId,
       "accessAt" => now(),
     ]);
   }

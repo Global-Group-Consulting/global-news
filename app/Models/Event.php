@@ -34,7 +34,6 @@ class Event extends Model {
   
   protected $appends = [
     "coverImgUrl",
-    "reservedSeats",
   ];
   
   protected $fillable = [
@@ -69,9 +68,13 @@ class Event extends Model {
   }
   
   public function remainingSeats() {
-    $count = $this->reservations()->where("status", EventReservationStatus::ACCEPTED)->count();
+    $reservations = $this->reservations()->where("status", EventReservationStatus::ACCEPTED)->get();
+    $count        = $reservations->count();
+    $companions   = $reservations->sum(fn($reservation) => count($reservation->companions));
     
-    return $this->seats - $count;
+    $total = $count + $companions;
+    
+    return $this->seats - $total;
   }
   
   protected function setCreatedByAttribute($value) {
@@ -104,7 +107,4 @@ class Event extends Model {
     return $this->coverImg ? Storage::url($this->coverImg) : '';
   }
   
-  protected function getReservedSeatsAttribute($value) {
-    return $this->reservations()->where("status", EventReservationStatus::ACCEPTED)->count();
-  }
 }

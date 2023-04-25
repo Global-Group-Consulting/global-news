@@ -93,6 +93,8 @@ class EventReservationController extends Controller {
       return [$item["_id"]["status"] => $item["count"]];
     })->toArray();
     
+    $counters["remainingSeats"] = $event->remainingSeats();
+    
     return response()->json($counters);
   }
   
@@ -101,8 +103,15 @@ class EventReservationController extends Controller {
       "status" => ["required", Rule::in([EventReservationStatus::ACCEPTED, EventReservationStatus::REJECTED, EventReservationStatus::PENDING])],
     ]);
     
-    if ( !$event->remainingSeats() && $data["status"] === EventReservationStatus::ACCEPTED) {
-      throw new BadRequestHttpException("Non ci sono più posti disponibili, pertanto non è possibile accettare la prenotazione.");
+    $requiredSeats  = count($reservation->companions) + 1;
+    $remainingSeats = $event->remainingSeats();
+    
+    if ($data["status"] === EventReservationStatus::ACCEPTED) {
+      if ($requiredSeats > 1 && $remainingSeats < $requiredSeats) {
+        throw new BadRequestHttpException("Sono stati richiesti $requiredSeats posti, ma ce ne sono disponibili solo $remainingSeats, pertanto non è possibile accettare la prenotazione.");
+      } elseif (!$remainingSeats) {
+        throw new BadRequestHttpException("Non ci sono più posti disponibili, pertanto non è possibile accettare la prenotazione.");
+      }
     }
     
     $reservation->update([

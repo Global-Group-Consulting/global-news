@@ -32,6 +32,9 @@ class EventController extends Controller {
   }
   
   public function show(Event $event){
-    return response()->json($event);
+    $data = $event->toArray();
+    $data["remainingSeats"] = $event->remainingSeats();
+    
+    return response()->json($data);
   }
 }
