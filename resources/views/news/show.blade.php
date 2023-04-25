@@ -2,7 +2,6 @@
 
 @section("content")
   <div class="row justify-content-center">
-
     <div class="col-12 col-md-10 col-xl-10">
 
       <ul class="nav mb-4 justify-content-center">
@@ -55,7 +54,7 @@
           <div>
             Letture: <strong>{{ count($news->readStatuses ?? [])  }}</strong><br>
             <code>
-              <pre>{{json_encode($news->readStatuses ?? [])}}</pre>
+              <pre>{{json_encode($news->readStatuses ?? [], JSON_PRETTY_PRINT)}}</pre>
             </code>
           </div>
 

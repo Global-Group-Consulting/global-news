@@ -6,6 +6,12 @@
   $isMultiple = isset($multiple) && $multiple;
   $selectName = $isMultiple ? $name . "[]" : $name;
   $errorName = $isMultiple ? $name . ".*" : $name;
+
+  $hasError = $errors->has($errorName) || $errors->has($name);
+
+  if($hasError && !$errors->has($errorName)){
+    $errorName = $name;
+  }
 @endphp
 
 <div class="mb-3">

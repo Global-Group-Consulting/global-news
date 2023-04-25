@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.4",
+        "js-cookie": "^3.0.1",
         "vue-multiselect": "^2.1.6"
     }
 }

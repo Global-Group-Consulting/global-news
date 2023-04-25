@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="z-index: 2">
-  <div class="container">
+  <div class="container-fluid">
    {{--  <a class="navbar-brand" href="{{ url('/') }}">
       Global SSO
     </a> --}}

@@ -17,6 +17,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use MongoDB\BSON\ObjectId;
 
 class PropagateNotification {
   protected $availableQueues = [];
@@ -54,14 +55,30 @@ class PropagateNotification {
    * @throws Exception
    */
   private function dispatchNotification($notification, $receiver) {
-    // fetch user by _id
-    $user                     = User::find($receiver["_id"] ?? $receiver["id"]);
+    $user                     = User::where("_id", $receiver["_id"])->first();
     $notification["receiver"] = $receiver;
     $className                = Str::ucfirst(Str::camel($notification["type"]));
-  
-    try {
-      $class = '\App\Notifications\\' . $className;
     
+    // gestisce il caso il cui l'id sia volutamente null ma ci sia un email o un numero di telefono
+    if ($receiver["_id"] === null) {
+      $user      = new User($receiver);
+      $user->_id = new ObjectId($receiver["_id"]);
+    }
+    
+    if ( !$user) {
+      $user = User::findOrFail($receiver);
+    }
+    
+    try {
+      $specificFileExists = file_exists(app_path("Notifications/$className.php"));
+      
+      // By default, use PolymorphicNotification class if the specific one doesn't exist
+      if ( !$specificFileExists) {
+        $className = "PolymorphicNotification";
+      }
+      
+      $class = '\App\Notifications\\' . $className;
+      
       // dynamically import the right class.
       Notification::send($user, new $class($notification));
     } catch (Exception $e) {
