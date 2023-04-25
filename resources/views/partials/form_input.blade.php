@@ -4,9 +4,10 @@
 
 <div class="mb-3 {{$hasFilePreview ? 'd-flex' : ''}}">
   @if($hasFilePreview)
-    <a href="{{Storage::url($value)}}" target="_blank" style="width: 67px"
-       class="flex-shrink-0 d-flex align-items-center me-2">
-      <img src="{{Storage::url($value)}}" class="img-fluid"> </a>
+    <a href="{{Storage::url($value)}}" target="_blank" style="height: 67px; aspect-ratio: 1/1"
+       class="flex-shrink-0 d-flex align-items-center me-2 border overflow-hidden">
+      <img src="{{Storage::url($value)}}" class="img-fluid " alt="locandina evento">
+    </a>
   @endif
 
   @if($hasFilePreview)

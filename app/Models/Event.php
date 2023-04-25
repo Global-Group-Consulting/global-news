@@ -13,8 +13,10 @@ use Jenssegers\Mongodb\Query\Builder;
 use MongoDB\BSON\ObjectId;
 
 /**
- * @property string $title
+ * @property string        $title
  * @property string        $content
+ * @property string        $city
+ * @property string        $place
  * @property Date          $startAt
  * @property Date          $endAt
  * @property int           $seats
@@ -46,6 +48,8 @@ class Event extends Model {
     "bookable",
     "apps",
     "coverImg",
+    "city",
+    "place"
   ];
   
   protected $casts = [

@@ -30,6 +30,8 @@ class UpsertEventRequest extends FormRequest {
       "active"   => "boolean",
       "bookable" => "boolean",
       "apps"     => "required",
+      "city"     => "required|string",
+      "place"     => "required|string",
       "coverImg" => ["image", ($this->routeIs("events.update") ? "nullable" : "required")]
     ];
   }
