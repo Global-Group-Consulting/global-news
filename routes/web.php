@@ -29,3 +29,6 @@ Route::middleware("auth")->resource("news", \App\Http\Controllers\NewsController
 Route::middleware("auth")->resource("events", \App\Http\Controllers\EventController::class);
 Route::middleware("auth")->resource("notifications", \App\Http\Controllers\NotificationController::class);
 Route::middleware("auth")->resource("faqs", \App\Http\Controllers\FaqController::class);
+
+Route::get('/events/{event}/reservations/{reservation}/pass', [\App\Http\Controllers\EventReservationController::class, 'pass']);
+

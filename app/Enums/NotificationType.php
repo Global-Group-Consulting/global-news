@@ -28,6 +28,8 @@ abstract class NotificationType {
   const PASSWORD_RECOVER = "passwordRecover";
   const PASSWORD_FORGOT = "passwordForgot";
   
+  const EVENT_RESERVATION_UPDATE = "eventReservationUpdate";
+  
   const ALL = [
     self::ORDER_UPDATE,
     self::NEW_MESSAGE,
@@ -57,6 +59,9 @@ abstract class NotificationType {
     // Password
     self::PASSWORD_RECOVER,
     self::PASSWORD_FORGOT,
+    
+    // news app
+    self::EVENT_RESERVATION_UPDATE,
   ];
   
 }

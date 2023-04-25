@@ -25,51 +25,47 @@
 </head>
 
 <body>
-<div id="app">
-  <main class="">
+  <main class="d-flex">
     {{-- sidebar --}}
-    <div class="d-flex h-100">
+    @auth
+      @include('partials.sidebar')
+    @endauth
+
+    <div class="flex-fill d-flex flex-column overflow-hidden">
       @auth
-        @include('partials.sidebar')
+        @include('partials.navbar')
       @endauth
 
-      <div class="flex-fill d-flex flex-column">
-        @auth
-          @include('partials.navbar')
-        @endauth
+      <div class="py-4 flex-fill"
+           style="oveflow-y:auto; overflow-x: hidden">
 
-        <div class="py-4 flex-fill"
-             style="oveflow-y:auto; overflow-x: hidden">
+        <div class="container-fluid">
+          @if(session()->has('error'))
+            <div class="alert alert-danger mx-3">
+              {{ session()->get('error') }}
+            </div>
+          @endif
 
-          <div class="container">
-            @if(session()->has('error'))
-              <div class="alert alert-danger mx-3">
-                {{ session()->get('error') }}
-              </div>
-            @endif
+          @if(session()->has('success'))
+            <div class="alert alert-success mx-3">
+              {{ session()->get('success') }}
+            </div>
+          @endif
 
-            @if(session()->has('success'))
-              <div class="alert alert-success mx-3">
-                {{ session()->get('success') }}
-              </div>
-            @endif
+          @yield('content')
 
-            @yield('content')
-
-          </div>
         </div>
       </div>
     </div>
   </main>
-</div>
 
   @yield("scripts")
 
   <script type="text/javascript">
-  bkLib.onDomLoaded(nicEditors.allTextAreas);
+    bkLib.onDomLoaded(nicEditors.allTextAreas)
 
 
-</script>
+  </script>
 </body>
 
 </html>
