@@ -32,6 +32,20 @@ Route::post("/testNotification", function (\Illuminate\Http\Request $request) {
 
 Route::middleware('auth.customToken')
   ->namespace("\App\Http\Controllers\Api")
+  ->prefix("events")
+  ->group(function () {
+    
+    Route::get('/', "EventController@index");
+    Route::get('/{event}', "EventController@show");
+    Route::get('/{event}/reservations', "EventReservationController@index");
+    Route::get('/{event}/reservations/counters', "EventReservationController@counters");
+    Route::post('/{event}/reservations', "EventReservationController@upsert");
+    Route::patch('/{event}/reservations/{reservation}/status', "EventReservationController@updateStatus");
+    Route::post('/{event}/reservations/{reservation}/statusNotify', "EventReservationController@statusNotify");
+  });
+
+Route::middleware('auth.customToken')
+  ->namespace("\App\Http\Controllers\Api")
   ->prefix("news")
   ->group(function () {
     
@@ -63,4 +77,18 @@ Route::middleware('auth.customToken')
     
     Route::get('/', "FaqController@index");
 //    Route::patch('/{faqs}/read', "NewsStatusController@read");
+  });
+
+Route::namespace("\App\Http\Controllers\CronAuth")
+  ->group(function () {
+    Route::post("/login", "AuthenticationController@login")
+      ->middleware("auth.cronUser");
+  });
+
+Route::namespace("\App\Http\Controllers\QrPass")
+  ->middleware('auth:sanctum')
+  ->prefix("qrpass")
+  ->group(function () {
+    Route::get("/events", "EventController@index");
+    Route::post("/check", "EventController@check");
   });

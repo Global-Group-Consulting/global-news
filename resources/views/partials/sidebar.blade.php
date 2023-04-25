@@ -4,7 +4,9 @@
      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
     <span class="fs-4">Global Communications</span>
   </a>
+
   <hr>
+
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
       <a href="/"
@@ -21,7 +23,13 @@
         News
       </a>
     </li>
-
+    <li>
+      <a href="{{ route('events.index') }}"
+         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'events.') === 0) ? 'active' : '' }}">
+        <i class="fas fa-laptop-house"></i>
+        Eventi
+      </a>
+    </li>
     <li>
       <a href="{{ route('notifications.index') }}"
          class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'notifications.') === 0) ? 'active' : '' }}">
@@ -29,13 +37,8 @@
         Notifiche
       </a>
     </li>
-<!--    <li>
-      <a href="{{ route('events.index') }}"
-         class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'events.') === 0) ? 'active' : '' }}">
-        <i class="fas fa-laptop-house"></i>
-        Eventi
-      </a>
-    </li>-->
+
+
     <li>
       <a href="{{ route('faqs.index') }}"
          class="nav-link text-white {{ (strpos(Route::currentRouteName(), 'faqs.') === 0) ? 'active' : '' }}">
