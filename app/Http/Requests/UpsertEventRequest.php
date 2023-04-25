@@ -23,7 +23,7 @@ class UpsertEventRequest extends FormRequest {
   public function rules() {
     return [
       "title"    => "required|string",
-      "content"  => "required|string",
+      "content"  => "string",
       "startAt"  => "required|date",
       //"endAt"    => "required|date",
       "seats"    => "required|int",

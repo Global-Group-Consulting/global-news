@@ -37,7 +37,9 @@
       <div class="col-12 col-md-8">
         <h1>{{ $event->title  }}</h1>
 
-        <p class="lead">{!! $event->content !!}</p>
+        @if(strlen(strip_tags($event->content)))
+          <p class="lead">{!! $event->content !!}</p>
+        @endif
 
         <div>Città: <strong>{{$event->city }}</strong></div>
         <div>Luogo: <strong>{{$event->place }}</strong></div>

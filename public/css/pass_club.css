@@ -11293,7 +11293,55 @@ body {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+  flex-direction: column;
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+@media (min-width: 992px) {
+  body {
+    justify-content: center;
+  }
+}
+
+.fab {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+@media print {
+  @page {
+    size: a4 landscape;
+  }
+  :root {
+    --bs-body-color: black;
+    --bs-body-bg: white;
+    --bs-dark-rgb: 255, 255, 255;
+  }
+
+  body > header.py-5 {
+    padding-top: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+  }
+
+  .card-header {
+    padding: 1rem !important;
+  }
+  .card-header h2, .card-header .h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  .list-unstyled {
+    margin-bottom: 0 !important;
+  }
 }

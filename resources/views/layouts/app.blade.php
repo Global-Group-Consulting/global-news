@@ -52,20 +52,20 @@
             </div>
           @endif
 
-            @yield('content')
+          @yield('content')
 
-          </div>
         </div>
       </div>
+    </div>
   </main>
 
   @yield("scripts")
 
   <script type="text/javascript">
-  bkLib.onDomLoaded(nicEditors.allTextAreas);
+    bkLib.onDomLoaded(nicEditors.allTextAreas)
 
 
-</script>
+  </script>
 </body>
 
 </html>
