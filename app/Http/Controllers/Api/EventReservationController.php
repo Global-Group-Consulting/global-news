@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\CreateNotification;
 use App\Models\Event;
 use App\Models\EventReservation;
+use App\Models\User;
 use App\Notifications\EventReservationUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -124,27 +125,74 @@ class EventReservationController extends Controller {
       "statusUpdatedAt" => now(),
     ]);
     
+    $passCodeList = [];
+    
     if ($data["status"] === EventReservationStatus::ACCEPTED) {
       // if the reservation is accepted, we must generate the pass, upload it to the cloud and add passUrl to the reservation
       $reservation->passCode = uniqid(null);
       $reservation->passQr   = $this->generatePass($reservation);
+      
+      $passCodeList[] = $reservation->passCode;
+      
+      $companions = $reservation->companions;
+      
+      // we also must generate the access for all companions
+      foreach ($companions as $i => $companion) {
+        $passCode                  = uniqid(null);
+        $companionReservation      = new EventReservation([
+          "eventId"  => $reservation->eventId,
+          "passCode" => $passCode,
+        ]);
+        $companionReservation->_id = $reservation->_id;
+        $companion["passCode"]     = $passCode;
+        $companion["passQr"]       = $this->generatePass($companionReservation);
+        
+        $passCodeList[] = $companion["passCode"];
+        $companions[$i] = $companion;
+      }
+      
+      $reservation->update([
+        "companions" => $companions,
+      ]);
+
     } else {
       $this->destroyPass($reservation);
       $reservation->passCode = null;
       $reservation->passQr   = null;
+      
+      $companions = $reservation->companions;
+      
+      foreach ($companions as $i => $companion) {
+        $this->destroyPass(new EventReservation($companion));
+        $companion["passCode"] = null;
+        $companion["passQr"]   = null;
+        $companion["passUrl"]  = null;
+        
+        $companions[$i] = $companion;
+      }
+      
+      $reservation->companions = $companions;
     }
     
     $reservation->save();
     
     if ($data["status"] === EventReservationStatus::ACCEPTED) {
-      $this->sendPassEmail($reservation, $event);
+      $this->sendPassEmail($reservation, $event, $passCodeList);
     }
     
     return $reservation;
   }
   
-  public function statusNotify(Event $event, EventReservation $reservation) {
-    $this->sendPassEmail($reservation, $event);
+  public function statusNotify(Event $event, EventReservation $reservation, string|array $passCode) {
+    if (is_array($passCode)) {
+      collect($passCode)->each(function ($item) use ($reservation, $event) {
+        $this->sendPassEmail($reservation, $event, $item);
+      });
+      
+      return;
+    }
+    
+    $this->sendPassEmail($reservation, $event, $passCode);
   }
   
   public function generatePass(EventReservation $reservation): string {
@@ -163,7 +211,7 @@ class EventReservationController extends Controller {
       ->generate(json_encode($data));
     
     $fileName = Str::uuid() . ".svg";
-    $path     = "events/{$reservation->eventId}/passes/$fileName";
+    $path = "events/{$reservation->eventId->__toString()}/passes/$fileName";
     
     Storage::put($path, $qrCode, "public");
     
@@ -178,13 +226,24 @@ class EventReservationController extends Controller {
     Storage::delete($reservation->passQr);
   }
   
-  public function sendPassEmail(EventReservation $reservation, Event $event) {
-    if ( !$reservation->passUrl) {
+  public function sendPassEmail(EventReservation $reservation, Event $event, $passCode) {
+    $userReservation = $reservation;
+    
+    if ($reservation->passCode !== $passCode) {
+      $userReservation = collect($reservation->companions)->first(function ($item) use ($passCode) {
+        return $item["passCode"] === $passCode;
+      });
+    }
+    
+    if ( !$userReservation || !$userReservation["passUrl"]) {
       Log::log("error", "Pass url not found for reservation {$reservation->_id->__toString()}");
       return;
     }
     
-    $reservation->user->sendNotification([
+    // TODO:: controllare che la notifica parta. Forse no perchè nei receiver, i collaborator non hanno alcun id
+    // e quindi non viene trovato il receiver
+    
+    (new User($userReservation))->sendNotification([
       "title"     => "Richiesta di partecipazione accettata",
       "content"   => "La richiesta di partecipazione all'evento ”{$event->title}” è stata accettata",
       "coverImg"  => "nullable|string",

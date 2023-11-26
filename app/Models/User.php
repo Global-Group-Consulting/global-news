@@ -135,7 +135,7 @@ class User extends Authenticatable {
       ],
       "extraData" => [ // data for email
         "actionLink" => $data["action"]["link"],
-        "user"       => $this->only(["firstName", "lastName"]),
+        "user"       => $this->only(["firstName", "lastName", "email"]),
         ...$emailConfig
       ]
     ])->onQueue($createNotificationConfig->queueName);

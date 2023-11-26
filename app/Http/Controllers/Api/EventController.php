@@ -22,11 +22,11 @@ class EventController extends Controller {
     $toReturn = Event::where([
       "apps"    => $app["code"],
       "active"  => true,
-      "startAt" => [
-        "\$gte" => Carbon::now()->startOf("day")
-      ],
+      /*"startAt" => [
+        "\$gte" => new Carbon("2023-04-10" )// Carbon::now()->startOf("day")
+      ],*/
     ])
-      ->orderBy("startAt", "asc")->get();
+      ->orderBy("startAt", "desc")->get();
     
     return response()->json($toReturn);
   }

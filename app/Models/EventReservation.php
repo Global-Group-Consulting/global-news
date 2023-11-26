@@ -10,14 +10,14 @@ use Jenssegers\Mongodb\Query\Builder;
 use MongoDB\BSON\ObjectId;
 
 /**
- * @property string      $eventId
- * @property string      $userId
+ * @property ObjectId    $eventId
+ * @property ObjectId    $userId
  * @property string      $status
  * @property array       $companions  // JSON
  * @property string      $passCode    // unique code generated on approval
  * @property string      $passQr      // qr code generated on approval
  * @property string      $passUrl     // qr code generated on approval
- * @property-read string $_id
+ * @property ObjectId    $_id
  * @property-read string $created_at
  * @property-read string $updated_at
  *
@@ -78,7 +78,23 @@ class EventReservation extends Model {
       return null;
     }
     
-    return Env::get("APP_URL") . "/events/" . $this->eventId . "/reservations/" . $this->_id . "/pass";
+    return $this->generatePassUrl($this->passCode);
+  }
+  
+  public function getCompanionsAttribute($value) {
+    if ( !isset($this->attributes["companions"])) {
+      return [];
+    }
+    
+    return collect($value)->map(function ($value) {
+      if (isset($value["passCode"])) {
+        $value["passUrl"] = $this->generatePassUrl($value["passCode"]);
+      }
+      
+      return $value;
+    })->all();
+
+//    return Env::get("APP_URL") . "/events/" . $this->eventId . "/reservations/" . $this->_id . "/pass";
   }
   
   public function registerAccess() {
@@ -87,5 +103,9 @@ class EventReservation extends Model {
       "userId"   => $this->userId,
       "accessAt" => now(),
     ]);
+  }
+  
+  private function generatePassUrl($passCode) {
+    return Env::get("APP_URL") . "/events/" . $this->eventId . "/reservations/" . $this->_id . "/pass/" . $passCode;
   }
 }
