@@ -30,6 +30,24 @@ Route::post("/testNotification", function (\Illuminate\Http\Request $request) {
   return $data;
 });
 
+Route::post("/sendNotification", function (){
+  (\App\Models\User::query()->first())->sendNotification([
+    "title"     => "Richiesta di partecipazione accettata",
+    "content"   => "La richiesta di partecipazione all'evento è stata accettata",
+    "coverImg"  => "nullable|string",
+    "type"      => \App\Enums\NotificationType::EVENT_RESERVATION_UPDATE,
+    "platforms" => [\App\Enums\PlatformType::APP, \App\Enums\PlatformType::PUSH, \App\Enums\PlatformType::EMAIL],
+    "action"    => [
+      "text" => "Visualizza il pass",
+      "link" => "asdaasdasd",
+    ],
+  ], [
+    "eventName" => "titolo evento",
+    "status"    => __("enums.EventReservationStatus.accepted", [], "it"),
+    "accepted"  => true,
+  ]);
+});
+
 Route::middleware('auth.customToken')
   ->namespace("\App\Http\Controllers\Api")
   ->prefix("events")

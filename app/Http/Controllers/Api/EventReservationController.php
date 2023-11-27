@@ -131,6 +131,7 @@ class EventReservationController extends Controller {
     
     $requiredSeats  = count($reservation->companions) + 1;
     $remainingSeats = $event->remainingSeats();
+    $oldStatus = $reservation->status;
     
     if ($data["status"] === EventReservationStatus::ACCEPTED) {
       if ($requiredSeats > 1 && $remainingSeats < $requiredSeats) {
@@ -153,7 +154,6 @@ class EventReservationController extends Controller {
       $reservation->passQr   = $this->generatePass($reservation);
       
       $passCodeList[] = $reservation->passCode;
-      
       $companions = $reservation->companions;
       
       // we also must generate the access for all companions
@@ -174,7 +174,10 @@ class EventReservationController extends Controller {
       $reservation->update([
         "companions" => $companions,
       ]);
-
+      
+      $reservation->save();
+      
+      $this->statusNotify($event, $reservation, $passCodeList);
     } else {
       $this->destroyPass($reservation);
       $reservation->passCode = null;
@@ -192,12 +195,7 @@ class EventReservationController extends Controller {
       }
       
       $reservation->companions = $companions;
-    }
-    
-    $reservation->save();
-    
-    if ($data["status"] === EventReservationStatus::ACCEPTED) {
-      $this->sendPassEmail($reservation, $event, $passCodeList);
+      $reservation->save();
     }
     
     return $reservation;
@@ -253,6 +251,16 @@ class EventReservationController extends Controller {
       $userReservation = collect($reservation->companions)->first(function ($item) use ($passCode) {
         return $item["passCode"] === $passCode;
       });
+      
+      if ( !$userReservation) {
+        throw new BadRequestHttpException("Passcode non valido");
+      }
+      
+      // Creo un utente fake per poter inviare la notifica
+      $userReservation["user"] = new User($userReservation);
+      
+      // impostando l'id a null, il file PropagateNotification.php invierà la notifica senza cercare l'utente nel db
+      $userReservation["user"]["_id"] = null;
     }
     
     if ( !$userReservation || !$userReservation["passUrl"]) {
@@ -260,10 +268,7 @@ class EventReservationController extends Controller {
       return;
     }
     
-    // TODO:: controllare che la notifica parta. Forse no perchè nei receiver, i collaborator non hanno alcun id
-    // e quindi non viene trovato il receiver
-    
-    (new User($userReservation))->sendNotification([
+    $userReservation["user"]->sendNotification([
       "title"     => "Richiesta di partecipazione accettata",
       "content"   => "La richiesta di partecipazione all'evento ”{$event->title}” è stata accettata",
       "coverImg"  => "nullable|string",
@@ -271,7 +276,7 @@ class EventReservationController extends Controller {
       "platforms" => [PlatformType::APP, PlatformType::PUSH, PlatformType::EMAIL],
       "action"    => [
         "text" => "Visualizza il pass",
-        "link" => $reservation->passUrl,
+        "link" => $userReservation["passUrl"],
       ],
     ], [
       "eventName" => $event->title,

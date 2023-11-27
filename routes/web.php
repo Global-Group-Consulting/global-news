@@ -1,5 +1,9 @@
 <?php
 
+use App\Enums\EventReservationStatus;
+use App\Enums\NotificationType;
+use App\Enums\PlatformType;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Auth;
 /*
