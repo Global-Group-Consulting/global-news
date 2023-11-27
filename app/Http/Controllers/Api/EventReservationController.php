@@ -25,12 +25,32 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class EventReservationController extends Controller {
   public function index(Event $event, Request $request) {
-    $status = $request->get("status");
+    $queryString      = collect($request->query())->filter(fn($el) => $el !== "null");
+    $status           = $queryString->get("status");
+    $userId           = $queryString->get("userId");
+    $referenceAgentId = $queryString->get("referenceAgent");
     $query  = $event->reservations();
     
     if ($status) {
       $query->where("status", $status);
     }
+    
+    if ($userId && !$referenceAgentId) {
+      $query->where("userId", new ObjectId($userId));
+    }
+    
+    if ($referenceAgentId) {
+      // recupero lista degli utenti che hanno come referenceAgentId l'id passato
+      $userIds = User::where("referenceAgent", new ObjectId($referenceAgentId))->select("id")->get()->map(function ($item) {
+        return new ObjectId($item->_id);
+      });
+      $indirectClients = User::whereIn("referenceAgent", $userIds)->select("id")->get()->map(function ($item) {
+        return new ObjectId($item->_id);
+      });
+      
+      $query->whereIn("userId", $userIds->concat($indirectClients)->toArray());
+    }
+    
     
     $reservations = $query->with("user")
       ->orderBy("created_at", "asc")->paginate();
