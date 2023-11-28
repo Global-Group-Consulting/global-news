@@ -55,6 +55,7 @@ Route::middleware('auth.customToken')
     
     Route::get('/', "EventController@index");
     Route::get('/{event}', "EventController@show");
+    Route::get('/{event}/accesses/export', "EventController@exportAccesses");
     Route::get('/{event}/reservations', "EventReservationController@index");
     Route::get('/{event}/reservations/counters', "EventReservationController@counters");
     Route::post('/{event}/reservations', "EventReservationController@upsert");

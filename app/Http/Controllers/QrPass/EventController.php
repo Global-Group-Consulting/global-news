@@ -19,16 +19,21 @@ class EventController extends Controller {
   
   public function check(Request $request) {
     $data = Validator::validate($request->all(), [
-      "reservationId" => "nullable|string",
       "eventId"       => "required|string",
       "passCode"      => "required|string",
     ]);
     
-    if ($request->has("reservationId")) {
-      $reservation = EventReservation::where("_id", $data["reservationId"])->first();
-    } else {
-      $reservation = EventReservation::where("passCode", $data["passCode"])->first();
-    }
+    $reservation = EventReservation::where(function ($q) use ($data) {
+        $q->where("passCode", $data["passCode"])
+          ->orWhere("companions.passCode", $data["passCode"]);
+      })
+      ->first();
+    
+//    if ($request->has("reservationId")) {
+//      $reservation = EventReservation::where("_id", $data["reservationId"])->first();
+//    } else {
+//      $reservation = EventReservation::where("passCode", $data["passCode"])->first();
+//    }
     
     $errorMessage = null;
     
@@ -38,9 +43,9 @@ class EventController extends Controller {
       $errorMessage = "Reservation not accepted";
     } elseif ($reservation->eventId->__tostring() !== $data["eventId"]) {
       $errorMessage = "Wrong event";
-    } elseif ($reservation->passCode !== $data["passCode"]) {
+    } /*elseif ($reservation->passCode !== $data["passCode"]) {
       $errorMessage = "Invalid pass";
-    }
+    }*/
     
     if ($errorMessage) {
       return response()->json(["error" => $errorMessage], 400);
