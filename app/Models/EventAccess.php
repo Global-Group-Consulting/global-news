@@ -16,6 +16,10 @@ class EventAccess extends Model {
     "reservationId",
     "eventId",
     "userId",
+    "firstName",
+    "lastName",
+    "email",
+    "passCode",
     "accessAt",
   ];
   

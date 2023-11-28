@@ -47,13 +47,23 @@ class EventController extends Controller {
       $errorMessage = "Invalid pass";
     }*/
     
+    $userPass = $reservation->passCode !== $data["passCode"]
+      ? collect($reservation->companions)->firstWhere("passCode", $data["passCode"])
+      : [
+        "firstName" => $reservation->user->firstName,
+        "lastName"  => $reservation->user->lastName,
+        "email"     => $reservation->user->email,
+        "passCode"  => $reservation->passCode,
+        "userId"    => $reservation->userId,
+      ];
+    
     if ($errorMessage) {
       return response()->json(["error" => $errorMessage], 400);
     }
     
     $reservation->load("user");
     
-    $reservation->registerAccess();
+    $reservation->registerAccess($userPass);
     
     return response()->json($reservation);
   }

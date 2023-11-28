@@ -36,6 +36,7 @@ class EventReservation extends Model {
     "status",
     "statusUpdatedAt",
     "companions",
+    "passCode"
   ];
   
   protected $dates = [
@@ -54,6 +55,7 @@ class EventReservation extends Model {
         "lastName",
         "email",
         "role",
+        "referenceAgent",
       ]);
   }
   
@@ -97,11 +99,11 @@ class EventReservation extends Model {
 //    return Env::get("APP_URL") . "/events/" . $this->eventId . "/reservations/" . $this->_id . "/pass";
   }
   
-  public function registerAccess() {
+  public function registerAccess($userPass) {
     $this->accesses()->create([
       "eventId"  => $this->eventId,
-      "userId"   => $this->userId,
       "accessAt" => now(),
+      ...$userPass
     ]);
   }
   

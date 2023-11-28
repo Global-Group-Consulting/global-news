@@ -2,15 +2,23 @@
 
 namespace App\Exports;
 
+use App\Enums\UserRole;
+use App\Exports\Sheets\EventAccessExportAccessesSheet;
+use App\Exports\Sheets\EventAccessExportDashboardSheet;
 use App\Models\Event;
 use App\Models\EventAccess;
+use Cassandra\Type\UserType;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class EventAccessExport implements FromArray, WithHeadings, WithColumnWidths {
+class EventAccessExport implements WithMultipleSheets {
   use Exportable;
   
   protected Event $event;
@@ -19,74 +27,49 @@ class EventAccessExport implements FromArray, WithHeadings, WithColumnWidths {
     $this->event = $event;
   }
   
-  public function headings(): array {
-    return [
-      ["Evento:", $this->event->title . "(" . $this->event->_id . ")"],
-      ["Luogo:", $this->event->place . "(" . $this->event->city . ")"],
-      ["Data:", $this->event->startAt->format("d/m/Y H:i:s")],
-      [],
-      [
-        "Id prenotazione",
-        "Id utente",
-        "Nome",
-        "Cognome",
-        "Email",
-        "Data accesso",
-        "Data prenotazione",
-      ]
-    ];
+  /**
+   * @return array
+   */
+  public function sheets(): array {
+    $sheets = [];
+    
+    $list = $this->getAccessList();
+    
+    $sheets[] = new EventAccessExportDashboardSheet($this->event, $list);
+    $sheets[] = new EventAccessExportAccessesSheet($this->event, $list);
+    
+    return $sheets;
   }
   
-  
-  /**
-   * @return \Illuminate\Support\Collection
-   */
-  public function array(): array {
+  private function getAccessList(): Collection {
     $accesses = EventAccess::query()
       ->where("eventId", $this->event->_id)
-      ->with("user", function ($query) {
-        $query->select("_id", "name", "surname", "email");
-      })
-      ->with("reservation")
+      ->orderBy("reservationId", "asc")
+      ->orderBy("userId", "desc")
       ->get();
     
-    /*
-     * Ospiti
-     * utenti
-     * agenti
-     * agente x -> ospiti
-     * agente x -> agenti
-     * agente x -> clienti
-     */
+    $groupedByPassCode = $accesses->groupBy("passCode");
     
-    $data = $accesses->map(function ($access) {
-      return [
-        "Id prenotazione"   => $access->reservation?->_id->__toString(),
-        "Id utente"         => $access->userId,
-        "Nome"              => $access->user?->firstName,
-        "Cognome"           => $access->user?->lastName,
-        "Email"             => $access->user?->email,
-        "Data accesso"      => $access->accessAt?->format("d/m/Y H:i:s"),
-        "Data prenotazione" => $access->reservation?->created_at->format("d/m/Y H:i:s"),
-      ];
-    });
+    return $groupedByPassCode->map(function ($access) {
+      $firstAccess      = $access->first();
+      $isCompanion      = !$firstAccess->userId;
+      $reservationOwner = $firstAccess?->reservation?->user;
+      $referenceAgent   = $reservationOwner?->refAgent;
 
-    dd($data);
-    
-    return $data->toArray();
+//      $ownerIsAgent     = $reservationOwner?->role === UserRole::AGENT;
+      
+      return [
+        "id_prenotazione"    => $firstAccess->reservationId,
+        "id_utente"          => $firstAccess->userId,
+        "nome"               => $firstAccess->firstName,
+        "cognome"            => $firstAccess->lastName,
+        "email"              => $firstAccess->email,
+        "ruolo"              => !$isCompanion ? UserRole::LABELS[$reservationOwner?->role] : 'Ospite',
+        "referente"          => $isCompanion ? $reservationOwner->firstName . " " . $reservationOwner->lastName . "($reservationOwner->_id)" : '',
+        "agente_riferimento" => $referenceAgent ? $referenceAgent->firstName . " " . $referenceAgent->lastName . "($referenceAgent->_id)" : '',
+        "data_accesso"       => $firstAccess->accessAt?->format("d/m/Y H:i:s"),
+        "data_prenotazione"  => $firstAccess->reservation?->created_at->format("d/m/Y H:i:s"),
+      ];
+    })->values();
   }
-  
-  public function columnWidths(): array {
-    
-    return [
-      "A" => 25, // id prenotazione
-      "B" => 25, // id utente
-      "C" => 20, // nome
-      "D" => 20, // cognome
-      "E" => 25, // email
-      "F" => 20, // data accesso
-      "G" => 20, // data prenotazione
-    ];
-  }
-  
 }
