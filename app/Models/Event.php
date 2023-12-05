@@ -36,6 +36,7 @@ class Event extends Model {
   
   protected $appends = [
     "coverImgUrl",
+    "isPast"
   ];
   
   protected $fillable = [
@@ -61,10 +62,10 @@ class Event extends Model {
     "endAt",
   ];
   
-  public function isPast(): bool {
+  public function isPast(): bool | null {
     $dayStart = Carbon::now()->startOf("day");
     
-    return $this->startAt->isBefore($dayStart);
+    return $this->startAt?->isBefore($dayStart);
   }
   
   public function reservations() {
@@ -105,6 +106,10 @@ class Event extends Model {
   
   public function getIdAttribute($value = null) {
     return $value;
+  }
+  
+  public function getIsPastAttribute($value = null) {
+    return $this->isPast();
   }
   
   protected function getCoverImgUrlAttribute() {

@@ -1,5 +1,9 @@
 <?php
 
+use App\Enums\EventReservationStatus;
+use App\Enums\NotificationType;
+use App\Enums\PlatformType;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Auth;
 /*
@@ -30,5 +34,5 @@ Route::middleware("auth")->resource("events", \App\Http\Controllers\EventControl
 Route::middleware("auth")->resource("notifications", \App\Http\Controllers\NotificationController::class);
 Route::middleware("auth")->resource("faqs", \App\Http\Controllers\FaqController::class);
 
-Route::get('/events/{event}/reservations/{reservation}/pass', [\App\Http\Controllers\EventReservationController::class, 'pass']);
+Route::get('/events/{event}/reservations/{reservation}/pass/{passCode}', [\App\Http\Controllers\EventReservationController::class, 'pass']);
 

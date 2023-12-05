@@ -22,13 +22,18 @@ class NewsStatusController extends Controller {
      * @var App $app
      */
     $app  = Session::get('app');
-    $news = News::where([
+    
+    $query = [
       "apps"   => $app["code"],
       "active" => true,
-      "readStatuses.userId" => ["\$ne" => $userId]
-    ])
-      ->orderBy("created_at", "desc")->get();
-  
+    ];
+    
+    if ($app["code"] !== 'club') {
+      $query["readStatuses.userId"] = ["\$ne" => $userId];
+    }
+    
+    $news = News::where($query)->orderBy("created_at", "desc")->get();
+    
     return response()->json(array_map(function ($singleNews) {
       $singleNews["coverImg"] = key_exists("coverImg", $singleNews) ? Storage::temporaryUrl($singleNews["coverImg"], now()->addMinutes(5)) : '';
     

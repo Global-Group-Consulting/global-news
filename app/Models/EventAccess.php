@@ -16,6 +16,10 @@ class EventAccess extends Model {
     "reservationId",
     "eventId",
     "userId",
+    "firstName",
+    "lastName",
+    "email",
+    "passCode",
     "accessAt",
   ];
   
@@ -23,7 +27,15 @@ class EventAccess extends Model {
     "accessAt",
   ];
   
-  public function eventReservation() {
+  public function reservation() {
     return $this->belongsTo(EventReservation::class, "reservationId", "_id");
+  }
+  
+  public function user() {
+    return $this->belongsTo(User::class, "userId", "_id");
+  }
+  
+  public function event() {
+    return $this->belongsTo(Event::class, "eventId", "_id");
   }
 }

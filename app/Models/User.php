@@ -55,6 +55,18 @@ class User extends Authenticatable {
     'email_verified_at' => 'datetime',
   ];
   
+  public function eventAccesses() {
+    return $this->hasMany(EventAccess::class, "userId", "_id");
+  }
+  
+  public function refAgent() {
+    return $this->hasOne(User::class, "_id", "referenceAgent");
+  }
+  
+  public function reservations() {
+    return $this->hasMany(EventReservation::class, "userId", "_id");
+  }
+  
   /**
    * @param  string<PlatformType>  $platform
    * @param  string<AppType>       $app
@@ -135,7 +147,7 @@ class User extends Authenticatable {
       ],
       "extraData" => [ // data for email
         "actionLink" => $data["action"]["link"],
-        "user"       => $this->only(["firstName", "lastName"]),
+        "user"       => $this->only(["firstName", "lastName", "email"]),
         ...$emailConfig
       ]
     ])->onQueue($createNotificationConfig->queueName);

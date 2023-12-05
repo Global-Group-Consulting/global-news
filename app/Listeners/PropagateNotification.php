@@ -55,7 +55,6 @@ class PropagateNotification {
    * @throws Exception
    */
   private function dispatchNotification($notification, $receiver) {
-    $user                     = User::where("_id", $receiver["_id"])->first();
     $notification["receiver"] = $receiver;
     $className                = Str::ucfirst(Str::camel($notification["type"]));
     
@@ -63,6 +62,8 @@ class PropagateNotification {
     if ($receiver["_id"] === null) {
       $user      = new User($receiver);
       $user->_id = new ObjectId($receiver["_id"]);
+    } else {
+      $user = User::where("_id", $receiver["_id"])->first();
     }
     
     if ( !$user) {

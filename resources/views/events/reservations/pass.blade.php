@@ -19,7 +19,11 @@
     <div class="card bg-dark">
       <div
           class="card-header px-5 py-4 d-flex flex-sm-row flex-column align-items-center justify-content-between gap-3 w-100">
-        <h2 class="mb-0">Pass Evento</h2>
+        <h2 class="mb-0 d-flex align-items-center gap-3">Pass Evento
+          @if($userReservation["isCompanion"])
+            <span class="badge bg-primary fs-6">Accompagnatore</span>
+          @endif
+        </h2>
 
         <button type="button" class="btn btn-primary d-print-none"
                 onclick="window.print()">Stampa PDF
@@ -60,13 +64,15 @@
               </li>
 
               <li>
-                <div class="lead" style="color: var(--bs-gray-600)">Partecipanti</div>
+                <div class="lead" style="color: var(--bs-gray-600)">Partecipante</div>
 
                 <ul class="list-unstyled ms-3">
-                  <li class="">{{$reservation->user["firstName"]}} {{$reservation->user["lastName"]}}</li>
-                  @foreach($reservation->companions as $companion)
-                    <li class="">{{$companion["firstName"]}} {{$companion["lastName"]}}</li>
-                  @endforeach
+                  <li class="">{{$userReservation["firstName"]}} {{$userReservation["lastName"]}}
+                    @if($userReservation["isCompanion"])
+                      <em class="">(Invitat* da
+                        <strong>{{$reservation->user["firstName"]}} {{$reservation->user["lastName"]}})</strong></em>
+                    @endif
+                  </li>
                 </ul>
 
               </li>
@@ -76,8 +82,8 @@
           <div class="col-12 col-md-3">
             <div class="visible-print text-center mb-3">
               <a style="max-width: 400px" class="d-inline-block" target="_blank"
-                 href="{{ Storage::url($reservation->passQr)  }}">
-                {!! $pass !!}
+                 href="{{ Storage::url($userReservation["passQr"])  }}">
+                {!! $passQr !!}
               </a>
 
               <style>
@@ -88,7 +94,7 @@
                 }
               </style>
 
-              <div class="mt-3">{{ $reservation->passCode  }}</div>
+              <div class="mt-3">{{ $userReservation["passCode"]  }}</div>
             </div>
           </div>
         </div>
